@@ -1,24 +1,68 @@
-import { usePokemons } from '@/lib/state/usePokemons';
+import {
+  useEv1PokemonSlots,
+  useEv2PokemonSlots,
+  useEv3PokemonSlots,
+} from '@/lib/state/usePokemons';
+import { useEffect } from 'react';
 import { PokemonSlot } from './PokemonSlot';
 
 export const PokemonsBoard = () => {
-  const pokemons = usePokemons((state) => state.pokemons);
+  const ev1Pokemons = useEv1PokemonSlots((state) => state.slots);
+  const ev2Pokemons = useEv2PokemonSlots((state) => state.slots);
+  const ev3Pokemons = useEv3PokemonSlots((state) => state.slots);
+  const provideEv1Pokemon = useEv1PokemonSlots((state) => state.providePokemon);
+  const provideEv2Pokemon = useEv2PokemonSlots((state) => state.providePokemon);
+  const provideEv3Pokemon = useEv3PokemonSlots((state) => state.providePokemon);
+  const removeEv1Pokemon = useEv1PokemonSlots((state) => state.removePokemon);
+  const removeEv2Pokemon = useEv2PokemonSlots((state) => state.removePokemon);
+  const removeEv3Pokemon = useEv3PokemonSlots((state) => state.removePokemon);
+
+  const handleRemoveEv1Pokemon = (index: number) => {
+    removeEv1Pokemon(index);
+    provideEv1Pokemon();
+  };
+  const handleRemoveEv2Pokemon = (index: number) => {
+    removeEv2Pokemon(index);
+    provideEv2Pokemon();
+  };
+  const handleRemoveEv3Pokemon = (index: number) => {
+    removeEv3Pokemon(index);
+    provideEv3Pokemon();
+  };
+
+  useEffect(() => {
+    provideEv1Pokemon();
+    provideEv2Pokemon();
+    provideEv3Pokemon();
+  }, []);
 
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
-        {pokemons.ev3.map((pokemon) => (
-          <PokemonSlot key={pokemon.id} pokemon={pokemon} />
+        {ev3Pokemons.map((pokemon, index) => (
+          <PokemonSlot
+            key={index}
+            pokemon={pokemon}
+            removePokemon={() => handleRemoveEv3Pokemon(index)}
+          />
         ))}
       </div>
       <div className="flex gap-4">
-        {pokemons.ev2.map((pokemon) => (
-          <PokemonSlot key={pokemon.id} pokemon={pokemon} />
+        {ev2Pokemons.map((pokemon, index) => (
+          <PokemonSlot
+            key={index}
+            pokemon={pokemon}
+            removePokemon={() => handleRemoveEv2Pokemon(index)}
+          />
         ))}
       </div>
       <div className="flex gap-4">
-        {pokemons.ev1.map((pokemon) => (
-          <PokemonSlot key={pokemon.id} pokemon={pokemon} />
+        {ev1Pokemons.map((pokemon, index) => (
+          <PokemonSlot
+            key={index}
+            pokemon={pokemon}
+            removePokemon={() => handleRemoveEv1Pokemon(index)}
+          />
         ))}
       </div>
     </div>

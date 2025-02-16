@@ -1,51 +1,86 @@
-import useSWR from 'swr';
-import POKEMONS_EV1 from '@/constants/pokemons-ev1.json';
-import POKEMONS_EV2 from '@/constants/pokemons-ev2.json';
-import POKEMONS_EV3 from '@/constants/pokemons-ev3.json';
-import { getRequiredTokens, getTokens } from '@/utils/getTokens';
+import { generatePokemon } from '@/utils/generatePokemon';
 import { create } from 'zustand';
 
-const IGNORE_EVOLUTION_IDS = [26]; // ライチュウだけ進化しない
-const getPokemons = (pokemons, canEvolution: boolean): Pokemon[] => {
-  return pokemons.map((pokemon) => {
-    const shiny = Math.random() < 0.2; // 20% chance of shiny
-    const points = Math.floor(Math.random() * 2); // 0 or 1 point
-    const evolutionSprites = [
-      ...POKEMONS_EV1,
-      ...POKEMONS_EV2,
-      ...POKEMONS_EV3,
-    ].find((pokemons) => pokemons.id === pokemon.id + 1)?.sprites;
-    const evolution =
-      canEvolution && !IGNORE_EVOLUTION_IDS.includes(pokemon.id)
-        ? {
-            id: pokemon.id + 1,
-            spriteUrl: evolutionSprites?.officialArtwork.default,
-          }
-        : null;
-
-    return {
-      ...pokemon,
-      points,
-      spriteUrl: shiny
-        ? pokemon.sprites.officialArtwork.shiny
-        : pokemon.sprites.officialArtwork.default,
-      requiredTokens: getRequiredTokens(),
-      tokens: getTokens(),
-      evolution: evolution,
-    };
-  });
+type State = {
+  slots: [Pokemon | null, Pokemon | null, Pokemon | null, Pokemon | null];
 };
+type Actions = {
+  providePokemon: () => void;
+  removePokemon: (index: number) => void;
+};
+export const useEv1PokemonSlots = create<State & Actions>((set) => ({
+  slots: [
+    generatePokemon(1),
+    generatePokemon(1),
+    generatePokemon(1),
+    generatePokemon(1),
+  ],
+  providePokemon: () =>
+    set((state) => {
+      // null のindex 全てにポケモンを追加
+      const slots = state.slots.slice();
+      for (const index in slots) {
+        if (slots[index] === null) {
+          slots[index] = generatePokemon(1);
+        }
+      }
 
-export const usePokemons = create<{
-  pokemons: {
-    ev1: Pokemon[];
-    ev2: Pokemon[];
-    ev3: Pokemon[];
-  };
-}>((set) => ({
-  pokemons: {
-    ev1: getPokemons(POKEMONS_EV1, true),
-    ev2: getPokemons(POKEMONS_EV2, true),
-    ev3: getPokemons(POKEMONS_EV3, false),
-  },
+      return { slots: slots as State['slots'] };
+    }),
+  removePokemon: (index) =>
+    set((state) => {
+      const slots = state.slots.slice();
+      slots[index] = null;
+      return { slots: slots as State['slots'] };
+    }),
+}));
+export const useEv2PokemonSlots = create<State & Actions>((set) => ({
+  slots: [
+    generatePokemon(2),
+    generatePokemon(2),
+    generatePokemon(2),
+    generatePokemon(2),
+  ],
+  providePokemon: () =>
+    set((state) => {
+      // null のindex 全てにポケモンを追加
+      const slots = state.slots.slice();
+      for (const index in slots) {
+        if (slots[index] === null) {
+          slots[index] = generatePokemon(2);
+        }
+      }
+      return { slots: slots as State['slots'] };
+    }),
+  removePokemon: (index) =>
+    set((state) => {
+      const slots = state.slots.slice();
+      slots[index] = null;
+      return { slots: slots as State['slots'] };
+    }),
+}));
+export const useEv3PokemonSlots = create<State & Actions>((set) => ({
+  slots: [
+    generatePokemon(3),
+    generatePokemon(3),
+    generatePokemon(3),
+    generatePokemon(3),
+  ],
+  providePokemon: () =>
+    set((state) => {
+      // null のindex 全てにポケモンを追加
+      const slots = state.slots.slice();
+      for (const index in slots) {
+        if (slots[index] === null) {
+          slots[index] = generatePokemon(3);
+        }
+      }
+      return { slots: slots as State['slots'] };
+    }),
+  removePokemon: (index) =>
+    set((state) => {
+      const slots = state.slots.slice();
+      slots[index] = null;
+      return { slots: slots as State['slots'] };
+    }),
 }));

@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import TOKENS from '@/constants/tokens.json';
 import { usePlayer } from '@/lib/state/usePlayer';
+import { cn } from '@/utils/classNames';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -32,7 +33,7 @@ export const TokensBoard = () => {
   };
 
   return (
-    <div className="select-none w-fit py-2 space-y-4">
+    <div className="w-fit select-none space-y-4 py-2">
       <div className="flex flex-wrap gap-4">
         {TOKENS.map((token) => {
           if (token.key === 'token5') return null;
@@ -41,7 +42,13 @@ export const TokensBoard = () => {
             <Button
               key={token.key}
               variant="outline"
-              className="h-auto relative p-2"
+              className={cn(
+                'relative h-auto p-2',
+                token.key === 'token1' && 'bg-red-100',
+                token.key === 'token2' && 'bg-green-100',
+                token.key === 'token3' && 'bg-yellow-100',
+                token.key === 'token4' && 'bg-blue-100',
+              )}
               disabled={
                 selectedTokens.length > 2 ||
                 (selectedTokens.length === 2 &&
@@ -57,7 +64,7 @@ export const TokensBoard = () => {
                 height={48}
                 alt={token.name}
               />
-              <div className="font-bold text-xl absolute -top-2 -right-2 rounded-full size-7 border grid place-content-center bg-background">
+              <div className="absolute -right-2 -top-2 grid size-7 place-content-center rounded-full border bg-background text-xl font-bold">
                 4
               </div>
             </Button>
@@ -66,7 +73,7 @@ export const TokensBoard = () => {
       </div>
 
       <div className="flex gap-4">
-        <div className="flex p-2 border rounded grow h-[58px]">
+        <div className="flex h-[58px] grow rounded border p-2">
           {selectedTokens.map((key, index) => {
             const token = player.tokens[key];
             return (
@@ -83,7 +90,7 @@ export const TokensBoard = () => {
 
           <Button
             variant="ghost"
-            className="size-10 relative p-2 [&_svg]:size-8 ml-auto w-fit"
+            className="relative ml-auto size-10 w-fit p-2 [&_svg]:size-8"
             disabled={selectedTokens.length === 0}
             onClick={() => setSelectedTokens([])}
           >

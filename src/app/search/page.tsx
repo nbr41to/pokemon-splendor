@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import itemData from '@/constants/result-items.json';
 import pokemonData from '@/constants/result-pokemons.json';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { useState } from 'react';
 
 const replaceKana = (str: string) => {
   return str
@@ -92,7 +92,7 @@ export default function Page() {
   // });
 
   return (
-    <div className="justify-center flex gap-x-8 p-8">
+    <div className="flex justify-center gap-x-8 p-8">
       <div className="w-80">
         <div className="flex gap-2">
           <Input

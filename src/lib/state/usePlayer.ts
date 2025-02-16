@@ -1,5 +1,3 @@
-import useSWR from 'swr';
-import TOKENS from '@/constants/tokens.json';
 import { create } from 'zustand';
 
 const INITIAL_DATA = {
@@ -43,15 +41,14 @@ type Actions = {
   setPlayer: (player: Player) => void;
   setTokens: (tokens: Record<TokenKey, Token>) => void;
   addTokens: (tokens: Record<TokenKey, Token>) => void;
-  incrementToken: (key: TokenKey) => void;
-  decrementToken: (key: TokenKey) => void;
+  addPokemon: (pokemon: Pokemon) => void;
 };
 
 export const usePlayer = create<State & Actions>((set) => ({
   player: INITIAL_DATA,
   setPlayer: (player) => set({ player }),
   setTokens: (tokens) =>
-    set((state) => ({ player: { ...state.player, tokens } })),
+    set((state) => ({ ...state, player: { ...state.player, tokens } })),
   addTokens: (tokens) =>
     set((state) => {
       const newTokens = { ...state.player.tokens };
@@ -61,22 +58,20 @@ export const usePlayer = create<State & Actions>((set) => ({
 
       return { player: { ...state.player, tokens: newTokens } };
     }),
-  incrementToken: (key) => {
+  addPokemon: (pokemon) =>
     set((state) => {
-      const newTokens = { ...state.player.tokens };
-      newTokens[key].quantity += 1;
+      const updatedPokemons = [...state.player.pokemons, pokemon].sort(
+        (a, b) => a.id - b.id,
+      );
 
-      return { player: { ...state.player, tokens: newTokens } };
-    });
-  },
-  decrementToken: (key) => {
-    set((state) => {
-      const newTokens = { ...state.player.tokens };
-      newTokens[key].quantity -= 1;
-
-      return { player: { ...state.player, tokens: newTokens } };
-    });
-  },
+      return {
+        ...state,
+        player: {
+          ...state.player,
+          pokemons: updatedPokemons,
+        },
+      };
+    }),
 }));
 
 // return useState;
