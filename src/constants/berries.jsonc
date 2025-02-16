@@ -1,0 +1,29 @@
+[
+  {
+    "name": "クラボのみ",
+    "flavor_text": "ポケモンに　持たせると\nまひを　回復する。\n",
+    "spriteUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/cheri-berry.png"
+  },
+  {
+    "name": "モモンのみ",
+    "spriteUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/pecha-berry.png"
+  },
+  // {
+  //   "name": "ヒメリのみ",
+  //   "spriteUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/leppa-berry.png"
+  // },
+  {
+    "name": "オレンのみ",
+    "spriteUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/oran-berry.png"
+  },
+  {
+    "name": "ラムのみ",
+    "flavor_text": "ポケモンに　持たせると\nすべての　状態異常を\n回復する。",
+    "spriteUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/lum-berry.png"
+  },
+  {
+    "name": "オボンのみ",
+    "flavor_text": "ポケモンに　持たせると\nＨＰを　少しだけ　回復する。\n",
+    "spriteUrl": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/sitrus-berry.png"
+  }
+]

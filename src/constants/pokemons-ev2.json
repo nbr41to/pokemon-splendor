@@ -1,0 +1,67 @@
+[
+  {
+    "id": 5,
+    "name": {
+      "entity": "charmeleon",
+      "en": "Charmeleon",
+      "ja": "リザード"
+    },
+    "sprites": {
+      "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/5.png",
+      "officialArtwork": {
+        "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png",
+        "shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/5.png"
+      }
+    }
+  },
+
+  {
+    "id": 17,
+    "name": {
+      "entity": "pidgeotto",
+      "en": "Pidgeotto",
+      "ja": "ピジョン"
+    },
+    "sprites": {
+      "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/17.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/17.png",
+      "officialArtwork": {
+        "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/17.png",
+        "shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/17.png"
+      }
+    }
+  },
+  {
+    "id": 26,
+    "name": {
+      "entity": "raichu",
+      "en": "Raichu",
+      "ja": "ライチュウ"
+    },
+    "sprites": {
+      "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/26.png",
+      "officialArtwork": {
+        "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/26.png",
+        "shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/26.png"
+      }
+    }
+  },
+  {
+    "id": 148,
+    "name": {
+      "entity": "dragonair",
+      "en": "Dragonair",
+      "ja": "ハクリュー"
+    },
+    "sprites": {
+      "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/148.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/148.png",
+      "officialArtwork": {
+        "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/148.png",
+        "shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/148.png"
+      }
+    }
+  }
+]

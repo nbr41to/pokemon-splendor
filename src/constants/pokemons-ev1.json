@@ -1,0 +1,66 @@
+[
+  {
+    "id": 4,
+    "name": {
+      "entity": "charmander",
+      "en": "Charmander",
+      "ja": "ヒトカゲ"
+    },
+    "sprites": {
+      "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/4.png",
+      "officialArtwork": {
+        "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png",
+        "shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/4.png"
+      }
+    }
+  },
+  {
+    "id": 16,
+    "name": {
+      "entity": "pidgey",
+      "en": "Pidgey",
+      "ja": "ポッポ"
+    },
+    "sprites": {
+      "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/16.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/16.png",
+      "officialArtwork": {
+        "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/16.png",
+        "shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/16.png"
+      }
+    }
+  },
+  {
+    "id": 25,
+    "name": {
+      "entity": "pikachu",
+      "en": "Pikachu",
+      "ja": "ピカチュウ"
+    },
+    "sprites": {
+      "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/25.png",
+      "officialArtwork": {
+        "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+        "shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/25.png"
+      }
+    }
+  },
+  {
+    "id": 147,
+    "name": {
+      "entity": "dratini",
+      "en": "Dratini",
+      "ja": "ミニリュウ"
+    },
+    "sprites": {
+      "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/147.png",
+      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/147.png",
+      "officialArtwork": {
+        "default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/147.png",
+        "shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/147.png"
+      }
+    }
+  }
+]
