@@ -21,11 +21,17 @@ export const getTokens = (quantity: 1 | 2): Record<TokenKey, Token> => {
 export const getRequiredTokens = (
   from: number,
   to: number,
+  limitTokenKeys = 4, // 種類数上限
 ): Record<TokenKey, Token> => {
   const tokens = {} as Record<TokenKey, Token>; // {from} 〜 {to} つの配列を生成して 1 ~ 4 の数字のランダムに配列に入れる
+  // 使用するトークンの種類数をランダムに決める
+  const targets = [1, 2, 3, 4]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, limitTokenKeys)
+    .slice(0, Math.floor(Math.random() * limitTokenKeys) + 1);
   const randomArray = Array.from({
     length: Math.floor(Math.random() * (to - from + 1)) + from,
-  }).map(() => Math.floor(Math.random() * 4) + 1); // token5は使用しない
+  }).map(() => Math.floor(Math.random() * targets.length) + 1);
 
   for (const key of TOKENS.map((t) => t.key)) {
     const token = TOKENS.find((t) => t.key === key) as (typeof TOKENS)[number];

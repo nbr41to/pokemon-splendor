@@ -25,7 +25,7 @@ export const calcFixedTokens = (player: Player) => {
 
       return acc;
     },
-    INITIAL_TOKENS as Record<TokenKey, Token>,
+    { ...INITIAL_TOKENS } as Record<TokenKey, Token>,
   );
 
   return fixedTokens;
@@ -46,7 +46,7 @@ export const calcTotalTokens = (player: Player) => {
 
       return acc;
     },
-    INITIAL_TOKENS as Record<TokenKey, Token>,
+    { ...INITIAL_TOKENS } as Record<TokenKey, Token>,
   );
 
   return totalTokens;

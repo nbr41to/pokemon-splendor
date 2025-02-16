@@ -2,6 +2,7 @@ import POKEMONS_EV1 from '@/constants/pokemons-ev1.json';
 import POKEMONS_EV2 from '@/constants/pokemons-ev2.json';
 import POKEMONS_EV3 from '@/constants/pokemons-ev3.json';
 import { getRequiredTokens, getTokens } from '@/utils/getTokens';
+import { calcTotalTokens } from './calcTokens';
 
 const POKEMONS = {
   ev1: POKEMONS_EV1,
@@ -14,7 +15,15 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
   const pokemons = POKEMONS[`ev${ev}`];
   const pokemon = pokemons[Math.floor(Math.random() * pokemons.length)];
   const shiny = Math.random() < 0.05; // 5  % chance of shiny
-  const points = Math.floor(Math.random() * 2); // 0 or 1 point
+  const requiredTokens = getRequiredTokens(
+    ev * 3,
+    ev * 3 + ev + ev,
+    ev < 3 ? 4 : 2,
+  );
+  const requiredTotalTokenQuantity = Object.keys(requiredTokens).reduce(
+    (acc, key) => acc + requiredTokens[key as TokenKey].quantity,
+    0,
+  );
   const evolutionSprites = [
     ...POKEMONS_EV1,
     ...POKEMONS_EV2,
@@ -31,11 +40,16 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
   return {
     id: pokemon.id,
     name: pokemon.name.ja,
-    points,
+    points:
+      ev === 1
+        ? Math.floor(Math.random() * 1.5)
+        : ev === 2
+          ? Math.floor(Math.random() * 4 + requiredTotalTokenQuantity / 3)
+          : Math.floor(Math.random() * 2 + requiredTotalTokenQuantity / 2),
     spriteUrl: shiny
       ? pokemon.sprites.officialArtwork.shiny
       : pokemon.sprites.officialArtwork.default,
-    requiredTokens: getRequiredTokens(ev + 1, (ev + 1) * 2),
+    requiredTokens: getRequiredTokens(ev * 3, ev * 3 + ev, ev < 3 ? 4 : 2),
     tokens: getTokens(ev < 3 ? 1 : 2),
     evolution: evolution,
   };

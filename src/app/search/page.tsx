@@ -7,6 +7,16 @@ import pokemonData from '@/constants/result-pokemons.json';
 import Image from 'next/image';
 import { useState } from 'react';
 
+type ItemData = {
+  name: {
+    entity: string;
+    en: string;
+    ja: string;
+  };
+  sprites: {
+    default: string | null;
+  };
+};
 const replaceKana = (str: string) => {
   return str
     .replace(/[\u30a1-\u30f6]/g, (match) => {
@@ -21,13 +31,13 @@ const replaceKana = (str: string) => {
 };
 export default function Page() {
   const [itemName, setItemName] = useState('');
-  const [itemResults, setItemResults] = useState<any>([]);
+  const [itemResults, setItemResults] = useState<ItemData[]>([]);
   const [pokemonName, setPokemonName] = useState('');
-  const [pokemonResults, setPokemonResults] = useState<any>([]);
+  const [pokemonResults, setPokemonResults] = useState<typeof pokemonData>([]);
 
   const searchItem = () => {
     if (itemName.length < 3) return [];
-    const itemResults = itemData.filter((item) => {
+    const itemResults = itemData.filter((item: ItemData) => {
       const kanaQuery = replaceKana(itemName);
 
       if (typeof item.name.ja === 'string') {
@@ -35,7 +45,7 @@ export default function Page() {
 
         return kanaName.includes(kanaQuery);
       }
-    });
+    }) as typeof itemData;
     setItemResults(itemResults);
   };
 
@@ -49,7 +59,8 @@ export default function Page() {
 
         return kanaName.includes(kanaQuery);
       }
-    });
+    }) as typeof pokemonData;
+
     setPokemonResults(pokemonResults);
   };
 
@@ -106,9 +117,14 @@ export default function Page() {
         </div>
 
         <div className="divide-y py-8">
-          {itemResults.map((item) => (
-            <div key={item.id} className="flex gap-2">
-              <Image src={item.sprites.default} width={40} height={40} alt="" />
+          {itemResults.map((item, index) => (
+            <div key={index} className="flex gap-2">
+              <Image
+                src={item.sprites.default || ''}
+                width={40}
+                height={40}
+                alt=""
+              />
               <div className="text-sm">
                 <div>{item.name.ja}</div>
                 <div>{item.name.entity}</div>

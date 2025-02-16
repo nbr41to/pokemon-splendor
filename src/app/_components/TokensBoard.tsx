@@ -33,7 +33,7 @@ export const TokensBoard = () => {
   };
 
   return (
-    <div className="w-fit select-none space-y-4 py-2">
+    <div className="mx-auto w-fit select-none space-y-4 py-2">
       <div className="flex flex-wrap gap-4">
         {TOKENS.map((token) => {
           if (token.key === 'token5') return null;
