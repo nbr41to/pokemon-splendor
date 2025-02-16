@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import { usePlayer } from '@/lib/state/usePlayer';
+import { calcScore } from '@/utils/calcScore';
 import { calcFixedTokens } from '@/utils/calcTokens';
 import { cn } from '@/utils/classNames';
 import { ChevronsRight, Trophy } from 'lucide-react';
@@ -12,10 +13,12 @@ export const PlayerBoard = () => {
 
   return (
     <>
-      <div className="fixed bottom-4 left-0 z-10 rounded-r-md bg-background/60 p-4 md:bottom-auto md:top-0">
+      <div className="fixed left-0 top-8 z-10 rounded-r-md bg-background/60 p-4 md:top-0">
         <div className="flex items-center">
           <Trophy size={24} className="m-2 stroke-blue-700" />
-          <span className="font-mono text-xl font-bold text-blue-700">8</span>
+          <span className="font-mono text-xl font-bold text-blue-700">
+            {calcScore(player.pokemons)}
+          </span>
         </div>
         {Object.keys(player.tokens).map((key) => {
           const token = player.tokens[key as TokenKey];

@@ -38,7 +38,7 @@ export const PokemonsBoard = () => {
 
   return (
     <div className="">
-      <div className="flex gap-3 overflow-x-scroll p-1">
+      <div className="flex gap-3 p-1 md:overflow-x-scroll">
         {ev3Pokemons.map((pokemon, index) => (
           <PokemonSlot
             key={index}
@@ -47,7 +47,7 @@ export const PokemonsBoard = () => {
           />
         ))}
       </div>
-      <div className="flex gap-3 overflow-x-scroll p-1">
+      <div className="flex gap-3 p-1 md:overflow-x-scroll">
         {ev2Pokemons.map((pokemon, index) => (
           <PokemonSlot
             key={index}
@@ -56,7 +56,7 @@ export const PokemonsBoard = () => {
           />
         ))}
       </div>
-      <div className="flex gap-3 overflow-x-scroll p-1">
+      <div className="flex gap-3 p-1 md:overflow-x-scroll">
         {ev1Pokemons.map((pokemon, index) => (
           <PokemonSlot
             key={index}
