@@ -1,8 +1,11 @@
 import POKEMONS_EV1 from '@/constants/pokemons-ev1.json';
 import POKEMONS_EV2 from '@/constants/pokemons-ev2.json';
 import POKEMONS_EV3 from '@/constants/pokemons-ev3.json';
-import { getRequiredTokens, getTokens } from '@/utils/getTokens';
-import { calcTotalTokens } from './calcTokens';
+import {
+  generateEvolveToken,
+  generateRequiredTokens,
+  getTokens,
+} from '@/utils/generateTokens';
 
 const POKEMONS = {
   ev1: POKEMONS_EV1,
@@ -15,7 +18,7 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
   const pokemons = POKEMONS[`ev${ev}`];
   const pokemon = pokemons[Math.floor(Math.random() * pokemons.length)];
   const shiny = Math.random() < 0.05; // 5  % chance of shiny
-  const requiredTokens = getRequiredTokens(
+  const requiredTokens = generateRequiredTokens(
     ev * 3,
     ev * 3 + ev + ev,
     ev < 3 ? 4 : 2,
@@ -30,10 +33,11 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
     ...POKEMONS_EV3,
   ].find((pokemons) => pokemons.id === pokemon.id + 1)?.sprites;
   const evolution =
-    ev < 3 && !IGNORE_EVOLUTION_IDS.includes(pokemon.id)
+    ev !== 3 && !IGNORE_EVOLUTION_IDS.includes(pokemon.id)
       ? {
           id: pokemon.id + 1,
           spriteUrl: evolutionSprites?.officialArtwork.default as string,
+          requiredToken: generateEvolveToken(ev) as EvolutionRequiredToken,
         }
       : null;
 
@@ -49,7 +53,7 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
     spriteUrl: shiny
       ? pokemon.sprites.officialArtwork.shiny
       : pokemon.sprites.officialArtwork.default,
-    requiredTokens: getRequiredTokens(ev * 3, ev * 3 + ev, ev < 3 ? 4 : 2),
+    requiredTokens: generateRequiredTokens(ev * 3, ev * 3 + ev, ev < 3 ? 4 : 2),
     tokens: getTokens(ev < 3 ? 1 : 2),
     evolution: evolution,
   };

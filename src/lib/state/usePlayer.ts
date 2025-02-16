@@ -28,10 +28,16 @@ const INITIAL_DATA = {
     token5: {
       quantity: 0,
       spriteUrl:
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/old-rod.png',
+    },
+    token6: {
+      quantity: 0,
+      spriteUrl:
         'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/big-nugget.png',
     },
   },
   score: 0,
+  reservations: [],
 };
 
 type State = {

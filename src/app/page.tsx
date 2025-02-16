@@ -7,7 +7,7 @@ import { TokensBoard } from './_components/TokensBoard';
 export default function Page() {
   return (
     <div className="">
-      <PokemonsBoard />
+      <PokemonsBoard phase="action" />
       <div>
         <TokensBoard />
         <PlayerBoard />

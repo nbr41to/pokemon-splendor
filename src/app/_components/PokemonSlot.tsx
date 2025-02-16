@@ -7,24 +7,25 @@ import Image from 'next/image';
 import { useMemo } from 'react';
 
 type Props = {
+  phase: Phase;
   pokemon: Pokemon | null;
   removePokemon: () => void;
 };
 
-export const PokemonSlot = ({ pokemon, removePokemon }: Props) => {
+export const PokemonSlot = ({ phase, pokemon, removePokemon }: Props) => {
   const addPokemon = usePlayer((state) => state.addPokemon);
   const player = usePlayer((state) => state.player);
   const setTokens = usePlayer((state) => state.setTokens);
   const fixedTokens = useMemo(() => calcFixedTokens(player), [player]);
   const totalTokens = useMemo(() => calcTotalTokens(player), [player]);
   const getable = useMemo(() => {
-    if (!pokemon) return false;
+    if (phase === 'evolve' || !pokemon) return false;
 
     return Object.keys(pokemon.requiredTokens).every((key) => {
       const token = pokemon.requiredTokens[key as TokenKey];
       return totalTokens[key as TokenKey].quantity >= token.quantity;
     });
-  }, [pokemon, totalTokens]);
+  }, [phase, pokemon, totalTokens]);
 
   const handleOnClick = (pokemon: Pokemon) => {
     const updatedTokens = { ...player.tokens };
@@ -65,6 +66,10 @@ export const PokemonSlot = ({ pokemon, removePokemon }: Props) => {
           pokemon.tokens.token4.quantity > 0 &&
             (getable ? 'bg-blue-200 ring-blue-500 hover:ring-2' : 'bg-blue-50'),
           getable && 'cursor-pointer',
+          pokemon.tokens.token5.quantity > 0 &&
+            (getable
+              ? 'bg-gray-300 ring-gray-500 hover:ring-2'
+              : 'bg-gray-100'),
         )}
         disabled={!getable}
         onClick={() => handleOnClick(pokemon)}
@@ -131,16 +136,16 @@ export const PokemonSlot = ({ pokemon, removePokemon }: Props) => {
             <div className="flex items-center justify-between gap-x-1 rounded border bg-background pl-1">
               <div className="flex items-center">
                 <Image
-                  src={
-                    'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rare-candy.png'
-                  }
+                  src={pokemon.evolution.requiredToken.spriteUrl}
                   width={32}
                   height={32}
                   alt=""
                 />
                 <div className="text-red-600">
                   <span className="text-sm">x</span>
-                  <span className="font-bold">4</span>
+                  <span className="font-bold">
+                    {pokemon.evolution.requiredToken.quantity}
+                  </span>
                 </div>
               </div>
               <ChevronsRight size={16} />

@@ -35,20 +35,21 @@ export const TokensBoard = () => {
   return (
     <div className="fixed bottom-0 right-0 z-10 w-full bg-background/60 p-4">
       <div className="mx-auto w-fit select-none space-y-4">
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-2 sm:gap-4">
           {TOKENS.map((token) => {
-            if (token.key === 'token5') return null;
+            if (token.key === 'token6') return null;
 
             return (
               <Button
                 key={token.key}
                 variant="outline"
                 className={cn(
-                  'relative h-auto p-2',
-                  token.key === 'token1' && 'bg-red-100',
-                  token.key === 'token2' && 'bg-green-100',
-                  token.key === 'token3' && 'bg-yellow-100',
-                  token.key === 'token4' && 'bg-blue-100',
+                  'relative h-auto p-1 sm:p-2',
+                  token.key === 'token1' && 'bg-red-100 hover:bg-red-50',
+                  token.key === 'token2' && 'bg-green-100 hover:bg-green-50',
+                  token.key === 'token3' && 'bg-yellow-100 hover:bg-yellow-50',
+                  token.key === 'token4' && 'bg-blue-100 hover:bg-blue-50',
+                  token.key === 'token5' && 'bg-gray-200 hover:bg-gray-100',
                 )}
                 disabled={
                   selectedTokens.length > 2 ||

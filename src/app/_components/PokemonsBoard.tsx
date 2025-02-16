@@ -6,7 +6,10 @@ import {
 import { useEffect } from 'react';
 import { PokemonSlot } from './PokemonSlot';
 
-export const PokemonsBoard = () => {
+type Props = {
+  phase: Phase;
+};
+export const PokemonsBoard = ({ phase }: Props) => {
   const ev1Pokemons = useEv1PokemonSlots((state) => state.slots);
   const ev2Pokemons = useEv2PokemonSlots((state) => state.slots);
   const ev3Pokemons = useEv3PokemonSlots((state) => state.slots);
@@ -38,28 +41,31 @@ export const PokemonsBoard = () => {
 
   return (
     <div className="">
-      <div className="flex gap-3 p-1 md:overflow-x-scroll">
+      <div className="flex gap-3 overflow-x-scroll p-1">
         {ev3Pokemons.map((pokemon, index) => (
           <PokemonSlot
             key={index}
+            phase={phase}
             pokemon={pokemon}
             removePokemon={() => handleRemoveEv3Pokemon(index)}
           />
         ))}
       </div>
-      <div className="flex gap-3 p-1 md:overflow-x-scroll">
+      <div className="flex gap-3 overflow-x-scroll p-1">
         {ev2Pokemons.map((pokemon, index) => (
           <PokemonSlot
             key={index}
+            phase={phase}
             pokemon={pokemon}
             removePokemon={() => handleRemoveEv2Pokemon(index)}
           />
         ))}
       </div>
-      <div className="flex gap-3 p-1 md:overflow-x-scroll">
+      <div className="flex gap-3 overflow-x-scroll p-1">
         {ev1Pokemons.map((pokemon, index) => (
           <PokemonSlot
             key={index}
+            phase={phase}
             pokemon={pokemon}
             removePokemon={() => handleRemoveEv1Pokemon(index)}
           />

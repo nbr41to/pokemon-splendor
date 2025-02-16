@@ -50,6 +50,7 @@ export const PlayerBoard = () => {
                 pokemon.tokens.token2.quantity > 0 && 'bg-green-100',
                 pokemon.tokens.token3.quantity > 0 && 'bg-yellow-100',
                 pokemon.tokens.token4.quantity > 0 && 'bg-blue-100',
+                pokemon.tokens.token5.quantity > 0 && 'bg-gray-200',
               )}
             >
               <div className="flex items-center justify-between px-2">

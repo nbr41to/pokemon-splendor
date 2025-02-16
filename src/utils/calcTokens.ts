@@ -4,6 +4,7 @@ const INITIAL_TOKENS = {
   token3: { quantity: 0, spriteUrl: '' },
   token4: { quantity: 0, spriteUrl: '' },
   token5: { quantity: 0, spriteUrl: '' },
+  token6: { quantity: 0, spriteUrl: '' },
 };
 
 export const calcFixedTokens = (player: Player) => {
