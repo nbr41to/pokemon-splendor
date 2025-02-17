@@ -6,6 +6,7 @@ import { cn } from '@/utils/classNames';
 import { ChevronsRight, Trophy } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo } from 'react';
+import { PlayerPokemon } from './PlayerPokemon';
 
 export const PlayerBoard = () => {
   const player = usePlayer((state) => state.player);
@@ -42,84 +43,7 @@ export const PlayerBoard = () => {
       <div className="mx-auto w-fit">
         <div className="mx-auto flex w-fit flex-wrap justify-center gap-2 py-2 md:justify-start">
           {player.pokemons.map((pokemon, index) => (
-            <Card
-              key={index}
-              className={cn(
-                'h-[192px] w-40',
-                pokemon.tokens.token1.quantity > 0 && 'bg-red-100',
-                pokemon.tokens.token2.quantity > 0 && 'bg-green-100',
-                pokemon.tokens.token3.quantity > 0 && 'bg-yellow-100',
-                pokemon.tokens.token4.quantity > 0 && 'bg-blue-100',
-                pokemon.tokens.token5.quantity > 0 && 'bg-gray-200',
-              )}
-            >
-              <div className="flex items-center justify-between px-2">
-                <div>
-                  {pokemon.points > 0 && (
-                    <div className="my-1 grid size-5 place-content-center rounded-full border bg-background font-mono text-sm font-bold">
-                      {pokemon.points}
-                    </div>
-                  )}
-                </div>
-                <div className="flex">
-                  {Object.keys(pokemon.tokens).map((key) => {
-                    const token = pokemon.tokens[key as TokenKey];
-                    if (token.quantity < 1) return null;
-
-                    return Array.from({ length: token.quantity }).map(
-                      (_, key) => (
-                        <Image
-                          key={key}
-                          src={token.spriteUrl}
-                          width={28}
-                          height={28}
-                          alt=""
-                        />
-                      ),
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="mx-2 rounded bg-background p-1">
-                <Image
-                  className="mx-auto"
-                  src={pokemon.spriteUrl}
-                  width={80}
-                  height={80}
-                  alt={pokemon.name}
-                />
-              </div>
-
-              {/* requiredTokens */}
-
-              {/* Evolution */}
-              {pokemon.evolution && (
-                <div className="m-2 flex items-center justify-between rounded border bg-background p-2">
-                  <div className="flex items-center">
-                    <Image
-                      src={
-                        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/rare-candy.png'
-                      }
-                      width={24}
-                      height={24}
-                      alt=""
-                    />
-                    <div className="text-red-600">
-                      <span className="">x</span>
-                      <span className="font-bold">4</span>
-                    </div>
-                  </div>
-                  <ChevronsRight size={20} />
-                  <Image
-                    src={pokemon.evolution.spriteUrl}
-                    width={40}
-                    height={40}
-                    alt=""
-                  />
-                </div>
-              )}
-            </Card>
+            <PlayerPokemon key={index} phase="action" pokemon={pokemon} />
           ))}
         </div>
       </div>

@@ -33,12 +33,6 @@ export const PokemonsBoard = ({ phase }: Props) => {
     provideEv3Pokemon();
   };
 
-  useEffect(() => {
-    provideEv1Pokemon();
-    provideEv2Pokemon();
-    provideEv3Pokemon();
-  }, []);
-
   return (
     <div className="">
       <div className="flex gap-3 overflow-x-scroll p-1">
