@@ -1,9 +1,7 @@
-import { Card } from '@/components/ui/card';
 import { usePlayer } from '@/lib/state/usePlayer';
 import { calcScore } from '@/utils/calcScore';
 import { calcFixedTokens } from '@/utils/calcTokens';
-import { cn } from '@/utils/classNames';
-import { ChevronsRight, Trophy } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo } from 'react';
 import { PlayerPokemon } from './PlayerPokemon';
@@ -43,6 +41,7 @@ export const PlayerBoard = () => {
       <div className="mx-auto w-fit">
         <div className="mx-auto flex w-fit flex-wrap justify-center gap-2 py-2 md:justify-start">
           {player.pokemons.map((pokemon, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <PlayerPokemon key={index} phase="action" pokemon={pokemon} />
           ))}
         </div>

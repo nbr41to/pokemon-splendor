@@ -1,5 +1,13 @@
 type TokenKey = 'token1' | 'token2' | 'token3' | 'token4' | 'token5' | 'token6';
+type TokenType =
+  | 'token1'
+  | 'token2'
+  | 'token3'
+  | 'token4'
+  | 'token5'
+  | 'token6';
 type Token = {
+  // type: TokenType;
   quantity: number;
   spriteUrl: string;
 };
@@ -33,12 +41,22 @@ type Player = {
 };
 
 type Phase = 'action' | 'evolve';
-type Game = {
+type GameState = {
   id: number;
   players: Player[];
-  pokemons: Pokemon[];
+  board: {
+    ev1: (Pokemon | null)[];
+    ev2: (Pokemon | null)[];
+    ev3: (Pokemon | null)[];
+  };
   tokens: Record<TokenKey, Token>;
   currentPlayer: Player;
   currentPhase: Phase;
   winner: Player | null;
+};
+
+/* GM */
+type StagedPokemon = {
+  id: number;
+  name: number;
 };

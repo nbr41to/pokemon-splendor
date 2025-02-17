@@ -9,10 +9,9 @@ import { useMemo } from 'react';
 type Props = {
   phase: Phase;
   pokemon: Pokemon | null;
-  removePokemon: () => void;
 };
 
-export const PokemonSlot = ({ phase, pokemon, removePokemon }: Props) => {
+export const PlayerPokemon = ({ phase, pokemon }: Props) => {
   const addPokemon = usePlayer((state) => state.addPokemon);
   const player = usePlayer((state) => state.player);
   const setTokens = usePlayer((state) => state.setTokens);
@@ -40,7 +39,6 @@ export const PokemonSlot = ({ phase, pokemon, removePokemon }: Props) => {
       }
     }
 
-    removePokemon();
     addPokemon(pokemon);
     setTokens(updatedTokens);
   };
@@ -52,7 +50,7 @@ export const PokemonSlot = ({ phase, pokemon, removePokemon }: Props) => {
       <button
         type="button"
         className={cn(
-          'relative flex h-[290x] min-w-60 max-w-60 flex-col items-center rounded-md pt-6',
+          'relative flex h-[180px] min-w-36 max-w-36 flex-col items-center rounded-md p-2 pt-4',
           pokemon.tokens.token1.quantity > 0 &&
             (getable ? 'bg-red-200 ring-red-500 hover:ring-2' : 'bg-red-50'),
           pokemon.tokens.token2.quantity > 0 &&
@@ -75,21 +73,22 @@ export const PokemonSlot = ({ phase, pokemon, removePokemon }: Props) => {
         onClick={() => handleOnClick(pokemon)}
       >
         {pokemon.points > 0 && (
-          <div className="absolute left-1 top-1 grid size-10 place-content-center rounded-full border bg-background font-mono text-2xl font-bold text-blue-700">
+          <div className="absolute left-1 top-1 grid size-8 place-content-center rounded-full border bg-background font-mono text-xl font-bold text-blue-700">
             {pokemon.points}
           </div>
         )}
-        <div className="absolute right-1 top-1 flex w-full items-center justify-end px-2">
+        <div className="absolute right-2 top-1 flex w-full items-center justify-end">
           {Object.keys(pokemon.tokens).map((key) => {
             const token = pokemon.tokens[key as TokenKey];
             if (token.quantity < 1) return null;
 
-            return Array.from({ length: token.quantity }).map((_, key) => (
+            return Array.from({ length: token.quantity }).map((_, index) => (
               <Image
-                key={key}
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                key={index}
                 src={token.spriteUrl}
-                width={40}
-                height={40}
+                width={28}
+                height={28}
                 alt=""
               />
             ));
@@ -97,67 +96,43 @@ export const PokemonSlot = ({ phase, pokemon, removePokemon }: Props) => {
         </div>
 
         <div className="w-full">
-          <div className="mx-2 grid place-content-center rounded bg-background p-1">
+          <div className="grid place-content-center rounded bg-background p-1">
             <Image
               className="bg-background p-1"
               src={pokemon.spriteUrl}
-              width={160}
-              height={160}
+              width={80}
+              height={80}
               alt={pokemon.name}
             />
           </div>
         </div>
 
-        {/* requiredTokens */}
-        <div className="flex w-full flex-wrap gap-1 p-1">
-          {Object.keys(pokemon.requiredTokens).map((key) => {
-            const token = pokemon.requiredTokens[key as TokenKey];
-            if (token.quantity < 1) return null;
-
-            return (
-              <div key={key} className="flex items-center">
-                <Image
-                  key={key}
-                  src={token.spriteUrl}
-                  width={32}
-                  height={32}
-                  alt=""
-                />
-                <span className="font-mono font-bold">{token.quantity}</span>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="flex h-[58px] w-full items-end justify-between px-2 pb-2">
-          <div className="font-bold text-neutral-600">{pokemon.name}</div>
-          {/* Evolution */}
-          {pokemon.evolution && (
-            <div className="flex items-center justify-between gap-x-1 rounded border bg-background pl-1">
-              <div className="flex items-center">
-                <Image
-                  src={pokemon.evolution.requiredToken.spriteUrl}
-                  width={32}
-                  height={32}
-                  alt=""
-                />
-                <div className="text-red-600">
-                  <span className="text-sm">x</span>
-                  <span className="font-bold">
-                    {pokemon.evolution.requiredToken.quantity}
-                  </span>
-                </div>
-              </div>
-              <ChevronsRight size={16} />
+        {/* Evolution */}
+        {pokemon.evolution && (
+          <div className="mt-2 flex w-full grow items-center justify-between gap-x-1 rounded border bg-background pl-1">
+            <div className="flex items-center">
               <Image
-                src={pokemon.evolution.spriteUrl}
-                width={48}
-                height={48}
+                src={pokemon.evolution.requiredToken.spriteUrl}
+                width={28}
+                height={28}
                 alt=""
               />
+              <div className="text-red-600">
+                <span className="text-sm">x</span>
+                <span className="font-bold">
+                  {pokemon.evolution.requiredToken.quantity}
+                </span>
+              </div>
             </div>
-          )}
-        </div>
+            <ChevronsRight size={16} />
+            <Image
+              src={pokemon.evolution.spriteUrl}
+              width={48}
+              height={48}
+              alt=""
+            />
+          </div>
+        )}
       </button>
     </Card>
   );
