@@ -5,28 +5,35 @@ import Image from 'next/image';
 import { Fragment } from 'react';
 
 type Props = {
-  size?: 'sm' | 'md';
   phase?: Phase;
   pokemon: Pokemon | null;
+  spritesType?: string;
   disabled: boolean;
   onClick: () => void;
 };
 
 export const PokemonCard = ({
-  size = 'md',
-  phase,
   pokemon,
+  spritesType = 'officialArtwork',
   onClick,
   disabled,
 }: Props) => {
-  const sizeClasses = size === 'sm' ? 'h-56 min-w-48' : 'h-[340px] w-60';
-
   if (!pokemon)
     return (
       <div className="m-0.5 sm:m-1">
         <Card className="h-[144px] min-w-24 max-w-24 sm:h-[230px] sm:min-w-48 sm:max-w-48" />
       </div>
     );
+
+  const isDefaultSprite = spritesType === 'default';
+  const pokemonSpriteUrl = pokemon.shiny
+    ? pokemon.sprites[spritesType].shiny
+    : pokemon.sprites[spritesType].default;
+  const evolveToSpriteUrl = pokemon.evolveCondition
+    ? pokemon.shiny
+      ? pokemon.evolveCondition.sprites[spritesType].shiny
+      : pokemon.evolveCondition.sprites[spritesType].default
+    : null;
 
   return (
     <button
@@ -56,7 +63,7 @@ export const PokemonCard = ({
             {pokemon.points}
           </div>
         )}
-        <div className="absolute right-2 top-0 z-10 flex w-full items-center justify-end sm:right-3">
+        <div className="absolute right-2 top-0 z-10 flex w-full items-center justify-end">
           {Object.values(pokemon.fixedTokens).map((token) => {
             const { quantity, spriteUrl } = token;
             if (quantity < 1) return null;
@@ -93,15 +100,29 @@ export const PokemonCard = ({
             )}
           >
             <Image
-              className="block sm:hidden"
-              src={pokemon.spriteUrl}
+              className={cn(
+                'block sm:hidden',
+                isDefaultSprite
+                  ? !pokemon.evolveFrom && pokemon.evolveCondition
+                    ? 'scale-150'
+                    : 'scale-125'
+                  : '',
+              )}
+              src={pokemonSpriteUrl}
               width={64}
               height={64}
               alt={pokemon.name}
             />
             <Image
-              className="hidden sm:block"
-              src={pokemon.spriteUrl}
+              className={cn(
+                'hidden sm:block',
+                isDefaultSprite
+                  ? !pokemon.evolveFrom && pokemon.evolveCondition
+                    ? 'scale-150'
+                    : 'scale-125'
+                  : '',
+              )}
+              src={pokemonSpriteUrl}
               width={100}
               height={100}
               alt={pokemon.name}
@@ -145,7 +166,7 @@ export const PokemonCard = ({
           </div>
 
           {/* Evolution */}
-          {pokemon.evolveCondition && (
+          {pokemon.evolveCondition && evolveToSpriteUrl && (
             <div className="flex h-full w-full items-center justify-between gap-x-1 rounded border bg-background px-0.5 py-1 sm:w-[104px]">
               <div className="flex items-center">
                 <Image
@@ -171,7 +192,11 @@ export const PokemonCard = ({
               </div>
               <ChevronsRight size={14} />
               <Image
-                src={pokemon.evolveCondition.spriteUrl}
+                className={cn(
+                  'opacity-70 brightness-0',
+                  isDefaultSprite && 'scale-150',
+                )}
+                src={evolveToSpriteUrl}
                 width={32}
                 height={32}
                 alt=""

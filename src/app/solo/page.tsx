@@ -5,6 +5,7 @@ import { SubscribeState } from './_components/subscribe-state';
 export default async function Page() {
   const playerId = await getCookie(COOKIE_NAMES.PLAYER_ID);
   const playerName = await getCookie(COOKIE_NAMES.PLAYER_NAME);
+  const spritesType = await getCookie(COOKIE_NAMES.SPRITES_TYPE);
 
   const player = {
     id: playerId,
@@ -14,7 +15,7 @@ export default async function Page() {
 
   return (
     <div className="w-screen pb-52">
-      <SubscribeState player={player} />
+      <SubscribeState player={player} spritesType={spritesType} />
     </div>
   );
 }

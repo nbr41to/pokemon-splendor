@@ -1,4 +1,3 @@
-import {} from '@/components/ui/scroll-area';
 import { useGameState } from '@/lib/state/useGameState';
 import { Slot } from './slot';
 

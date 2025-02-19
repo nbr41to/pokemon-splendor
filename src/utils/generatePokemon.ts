@@ -37,13 +37,23 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
     0,
   );
 
+  const evolveToPokemon = STAGED_POKEMONS.find(
+    (p) => p.evolvesFrom === pokemon.id,
+  );
   const evolveCondition =
-    pokemon.evolvesTo && ev !== 3
+    pokemon.evolvesTo && evolveToPokemon && ev !== 3
       ? {
           evolveTo: pokemon.evolvesTo,
-          spriteUrl: STAGED_POKEMONS.find(
-            (pokemons) => pokemons.id === pokemon.evolvesTo[0],
-          )?.sprites.officialArtwork.default as string,
+          sprites: {
+            default: {
+              default: evolveToPokemon.sprites.default,
+              shiny: evolveToPokemon.sprites.front_shiny,
+            },
+            officialArtwork: {
+              default: evolveToPokemon.sprites.officialArtwork.default,
+              shiny: evolveToPokemon.sprites.officialArtwork.shiny,
+            },
+          },
           requiredToken: generateEvolveToken(ev),
         }
       : null;
@@ -52,15 +62,23 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
     uid: nanoid(10),
     id: pokemon.id,
     name: pokemon.name.ja,
+    shiny: shiny,
     points:
       ev === 1
         ? Math.floor(Math.random() * 1.5)
         : ev === 2
           ? Math.floor(Math.random() * 4 + requiredTotalTokenQuantity / 3)
           : Math.floor(Math.random() * 2 + requiredTotalTokenQuantity / 2),
-    spriteUrl: shiny
-      ? pokemon.sprites.officialArtwork.shiny
-      : pokemon.sprites.officialArtwork.default,
+    sprites: {
+      default: {
+        default: pokemon.sprites.default,
+        shiny: pokemon.sprites.front_shiny,
+      },
+      officialArtwork: {
+        default: pokemon.sprites.officialArtwork.default,
+        shiny: pokemon.sprites.officialArtwork.shiny,
+      },
+    },
     requiredTokens: generateRequiredTokens(ev * 3, ev * 3 + ev, ev < 3 ? 4 : 2),
     fixedTokens: generateFixedTokens(ev < 3 ? 1 : 2, pokemon.types),
     evolveFrom: pokemon.evolvesFrom,

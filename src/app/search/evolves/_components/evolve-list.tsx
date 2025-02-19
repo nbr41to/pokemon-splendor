@@ -35,7 +35,11 @@ export const EvolveList = () => {
                     const pokemon = pokemonsData.find((p) => p.id === evolveTo);
                     if (!pokemon) return null;
 
-                    return <PokemonCell key={pokemon.id} pokemon={pokemon} />;
+                    return (
+                      <div key={pokemon.id} className="flex items-center">
+                        <PokemonCell pokemon={pokemon} />
+                      </div>
+                    );
                   })}
                 </div>
               </>

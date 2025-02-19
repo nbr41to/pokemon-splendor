@@ -13,6 +13,7 @@ import type pokemonsData from '@/constants/generated/pokemons.json';
 import { useStagedPokemons } from '@/lib/state/useStagedPokemons';
 import { CirclePlus, Copy } from 'lucide-react';
 import Image from 'next/image';
+import { CopyButton } from './copy-button';
 
 type Props = {
   pokemon: (typeof pokemonsData)[number];
@@ -25,13 +26,16 @@ export const PokemonCell = ({ pokemon }: Props) => {
 
   return (
     <Dialog>
-      <DialogTrigger className="flex w-40 min-w-40 items-center">
-        <Image src={pokemon.sprites.default} width={80} height={80} alt="" />
-        <div className="space-y-1">
-          <div className="text-left text-sm">{pokemon.name.entity}</div>
-          <div className="text-left">{pokemon.name.ja}</div>
-        </div>
-      </DialogTrigger>
+      <div className="flex items-center">
+        <DialogTrigger className="flex w-40 min-w-40 items-center">
+          <Image src={pokemon.sprites.default} width={80} height={80} alt="" />
+          <div className="space-y-1">
+            <div className="text-left text-sm">{pokemon.name.entity}</div>
+            <div className="text-left">{pokemon.name.ja}</div>
+          </div>
+        </DialogTrigger>
+        <CopyButton pokemon={pokemon} />
+      </div>
 
       <DialogContent>
         <DialogHeader>

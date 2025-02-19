@@ -7,12 +7,19 @@ type Tokens = Record<TokenType, Token>;
 type EvolutionRequiredToken = Token & {
   type: TokenType;
 };
-
+type Sprites = Record<
+  string,
+  {
+    default: string;
+    shiny: string;
+  }
+>;
 type Pokemon = {
   uid: string;
   id: number;
   name: string;
-  spriteUrl: string;
+  shiny: boolean;
+  sprites: Sprites;
   points: number;
   fixedTokens: Tokens;
   requiredTokens: Tokens;
@@ -20,7 +27,7 @@ type Pokemon = {
   evolveCondition: {
     evolveTo: number[];
     requiredToken: EvolutionRequiredToken;
-    spriteUrl: string;
+    sprites: Sprites;
   } | null;
 };
 

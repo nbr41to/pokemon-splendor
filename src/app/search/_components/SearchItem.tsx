@@ -41,9 +41,9 @@ export const SearchItem = () => {
   };
 
   return (
-    <div className="space-y-4 bg-background p-4">
+    <div className="bg-background px-4 pb-4">
       <form
-        className="flex gap-2"
+        className="sticky top-0 flex gap-2 border-b bg-white p-4"
         onSubmit={(e) => {
           e.preventDefault();
           searchItem();
@@ -58,10 +58,13 @@ export const SearchItem = () => {
           Search
         </Button>
       </form>
-      <div className="grid grid-cols-3 divide-x divide-y">
+      <div className="grid grid-cols-3 border-l">
         {itemResults.map((item) => {
           return (
-            <div key={item.id} className="flex w-44 items-center gap-2 p-1">
+            <div
+              key={item.id}
+              className="flex w-44 items-center gap-2 border-b border-r p-1"
+            >
               <Image
                 src={item.sprites.default as string}
                 width={40}

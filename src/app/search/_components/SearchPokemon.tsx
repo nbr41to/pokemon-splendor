@@ -42,9 +42,9 @@ export const SearchPokemon = () => {
   };
 
   return (
-    <div className="space-y-4 bg-background p-4">
+    <div className="bg-background px-4 pb-4">
       <form
-        className="flex gap-2"
+        className="sticky top-0 flex gap-2 border-b bg-white p-4"
         onSubmit={(e) => {
           e.preventDefault();
           searchPokemon();
@@ -59,7 +59,8 @@ export const SearchPokemon = () => {
           Search
         </Button>
       </form>
-      <div className="grid grid-cols-3 border-l border-t">
+
+      <div className="grid grid-cols-3 border-l">
         {pokemonResults.map((pokemon) => {
           return <PokemonDetailDialog key={pokemon.id} pokemon={pokemon} />;
         })}

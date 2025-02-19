@@ -18,6 +18,7 @@ export const Slot = ({ phase, pokemon, inReservation = false }: Props) => {
   const isReserving = useMe((state) => state.isReserving);
   const setIsReserving = useMe((state) => state.setIsReserving);
   const setMe = useMe((state) => state.setMe);
+  const spritesType = useMe((state) => state.settings.sprites);
   const evolveCondition = useEvolve((state) => state.evolve);
 
   const totalTokens = useMemo(() => calcTotalTokens(player), [player]);
@@ -78,6 +79,7 @@ export const Slot = ({ phase, pokemon, inReservation = false }: Props) => {
   return (
     <PokemonCard
       pokemon={pokemon}
+      spritesType={spritesType}
       disabled={!isReserving && !getable && !evolvable}
       onClick={handleOnClick}
     />

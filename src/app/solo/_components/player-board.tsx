@@ -20,6 +20,7 @@ export const PlayerBoard = () => {
   const setState = useGameState((state) => state.setState);
 
   const player = useMe((state) => state.player);
+  const spritesType = useMe((state) => state.settings.sprites);
 
   const isReserving = useMe((state) => state.isReserving);
   const setIsReserving = useMe((state) => state.setIsReserving);
@@ -105,6 +106,7 @@ export const PlayerBoard = () => {
           <PokemonCardCarrying
             key={pokemon.uid}
             pokemon={pokemon}
+            spritesType={spritesType}
             selected={evolve?.evolveFromUid === pokemon.uid}
             disabled={
               state.currentPhase !== 'evolve' ||

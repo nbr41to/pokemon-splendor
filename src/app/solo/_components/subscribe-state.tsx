@@ -12,12 +12,17 @@ import { PlayerBoard } from './player-board';
 type Props = {
   // state: GameState;
   player: RoomPlayer;
+  spritesType: string | undefined;
 };
 
-export const SubscribeState = ({ player }: Props) => {
+export const SubscribeState = ({
+  player,
+  spritesType = 'officialArtwork',
+}: Props) => {
   const state = useGameState((state) => state.state);
   const setState = useGameState((state) => state.setState);
   const setMe = useMe((state) => state.setMe);
+  const setSettings = useMe((state) => state.setSettings);
 
   const isStarted = state.players.length > 0;
 
@@ -43,6 +48,7 @@ export const SubscribeState = ({ player }: Props) => {
 
     setState(startGame(initialState));
     setMe(initialPlayer);
+    setSettings({ sprites: spritesType });
   };
 
   const doTurnEnd = () => {

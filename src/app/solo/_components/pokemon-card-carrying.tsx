@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 type Props = {
   pokemon: Pokemon;
+  spritesType: string | undefined;
   selected: boolean;
   disabled: boolean;
   onClick: () => void;
@@ -12,10 +13,21 @@ type Props = {
 
 export const PokemonCardCarrying = ({
   pokemon,
+  spritesType = 'officialArtwork',
   selected,
   disabled,
   onClick,
 }: Props) => {
+  const isDefaultSprite = spritesType === 'default';
+  const pokemonSpriteUrl = pokemon.shiny
+    ? pokemon.sprites[spritesType].shiny
+    : pokemon.sprites[spritesType].default;
+  const evolveToSpriteUrl = pokemon.evolveCondition
+    ? pokemon.shiny
+      ? pokemon.evolveCondition.sprites[spritesType].shiny
+      : pokemon.evolveCondition.sprites[spritesType].default
+    : null;
+
   return (
     <button type="button" disabled={disabled} onClick={onClick}>
       <Card
@@ -79,8 +91,15 @@ export const PokemonCardCarrying = ({
         <div className="w-full">
           <div className="grid place-content-center rounded bg-background p-1">
             <Image
-              className="bg-background p-1"
-              src={pokemon.spriteUrl}
+              className={cn(
+                'bg-background p-1',
+                isDefaultSprite
+                  ? !pokemon.evolveFrom && pokemon.evolveCondition
+                    ? 'scale-150'
+                    : 'scale-125'
+                  : '',
+              )}
+              src={pokemonSpriteUrl}
               width={80}
               height={80}
               alt={pokemon.name}
@@ -89,7 +108,7 @@ export const PokemonCardCarrying = ({
         </div>
 
         {/* Evolution */}
-        {pokemon.evolveCondition && (
+        {pokemon.evolveCondition && evolveToSpriteUrl && (
           <div className="mt-2 flex w-full grow items-center justify-between gap-x-1 rounded border bg-background pl-1">
             <div className="flex items-end">
               <Image
@@ -107,7 +126,11 @@ export const PokemonCardCarrying = ({
             </div>
             <ChevronsRight size={16} />
             <Image
-              src={pokemon.evolveCondition.spriteUrl}
+              className={cn(
+                'opacity-70 brightness-0',
+                isDefaultSprite && 'scale-150',
+              )}
+              src={evolveToSpriteUrl}
               width={48}
               height={48}
               alt=""

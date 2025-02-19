@@ -8,6 +8,7 @@ type State = {
 type Actions = {
   addPokemon: (id: number) => void;
   removePokemon: (id: number) => void;
+  clearPokemons: () => void;
 };
 export const useStagedPokemons = create<State & Actions>((set) => ({
   pokemonIds: stagedPokemons,
@@ -24,4 +25,5 @@ export const useStagedPokemons = create<State & Actions>((set) => ({
       );
       return { pokemonIds };
     }),
+  clearPokemons: () => set({ pokemonIds: [] }),
 }));
