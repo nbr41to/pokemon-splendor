@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import {} from '@/components/ui/dialog';
 import { useGameState } from '@/lib/state/useGameState';
 import { useMe } from '@/lib/state/useMe';
 import { calcHasEvolvable } from '@/utils/calcAble';
@@ -48,6 +47,7 @@ export const GetTokenFormDialog = ({ open, setOpen }: Props) => {
   return (
     <>
       <Button
+        size="lg"
         variant="outline"
         className="rounded-full"
         onClick={() => setOpen(!open)}
@@ -56,20 +56,23 @@ export const GetTokenFormDialog = ({ open, setOpen }: Props) => {
         道具をもらう
       </Button>
       {open && (
-        <div className="mx-auto w-fit rounded bg-background p-5">
-          {/* <DialogContent className="space-y-4">
-        <DialogHeader>
-          <DialogTitle>道具をもらう</DialogTitle>
-          <DialogDescription>
-            道具は、ポケモンをゲットするために使います。自分のターンで1度だけ、同じ道具を2つか、種類が異なる道具を3つもらうことができます。（道具をもらったターンでポケモンをゲットすることはできません。）
-          </DialogDescription>
-        </DialogHeader> */}
-          <GetTokenForm
-            publicTokens={state.tokens}
-            hasTokens={playerMe.tokens}
-            hasFixedTokens={calcFixedTokens(playerMe)}
-            onSubmit={handleOnSubmit}
-          />
+        <div className="fixed bottom-0 left-0 w-full bg-background p-5">
+          <div className="mx-auto w-fit">
+            {/* <div className="mx-auto max-w-96 space-y-2 py-4">
+              <h3 className='"text-lg tracking-tight" font-semibold leading-none'>
+                道具をもらう
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                道具は、ポケモンをゲットするために使います。自分のターンで1度だけ、同じ道具を2つか、種類が異なる道具を3つもらうことができます。（道具をもらったターンでポケモンをゲットすることはできません。）
+              </p>
+            </div> */}
+            <GetTokenForm
+              publicTokens={state.tokens}
+              hasTokens={playerMe.tokens}
+              hasFixedTokens={calcFixedTokens(playerMe)}
+              onSubmit={handleOnSubmit}
+            />
+          </div>
         </div>
       )}
     </>

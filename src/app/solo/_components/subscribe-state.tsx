@@ -55,7 +55,7 @@ export const SubscribeState = ({ player }: Props) => {
   };
 
   return (
-    <div>
+    <div className="sm:mx-auto sm:w-fit">
       <Board />
       <PlayerBoard />
 

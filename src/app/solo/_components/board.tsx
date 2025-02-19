@@ -9,8 +9,8 @@ export const Board = () => {
   } = useGameState((state) => state.state);
 
   return (
-    <div className="p-5 sm:mx-auto sm:w-fit">
-      <div className="flex gap-x-2 overflow-x-scroll">
+    <div className="p-1 sm:mx-auto sm:w-fit sm:p-5">
+      <div className="flex overflow-x-scroll">
         {ev3.map((pokemon, index) => (
           <Slot
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -20,7 +20,7 @@ export const Board = () => {
           />
         ))}
       </div>
-      <div className="flex gap-x-2 overflow-x-scroll">
+      <div className="flex overflow-x-scroll">
         {ev2.map((pokemon, index) => (
           <Slot
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -30,7 +30,7 @@ export const Board = () => {
           />
         ))}
       </div>
-      <div className="flex gap-x-2 overflow-x-scroll">
+      <div className="flex overflow-x-scroll">
         {ev1.map((pokemon, index) => (
           <Slot
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
