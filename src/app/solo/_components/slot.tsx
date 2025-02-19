@@ -50,13 +50,18 @@ export const Slot = ({ phase, pokemon }: Props) => {
     if (phase === 'action') {
       for (const key of Object.keys(pokemon.requiredTokens)) {
         const requiredToken = requiredTokens[key as TokenType];
-        requiredToken.quantity =
+        const discountTokenQuantity =
           requiredToken.quantity - fixedTokens[key as TokenType].quantity;
+
         // ゲットする場合のトークンの消費処理
-        if (requiredToken.quantity > 0) {
+        if (discountTokenQuantity > 0) {
           updatedPlayer.tokens[key as TokenType].quantity =
             updatedPlayer.tokens[key as TokenType].quantity -
-            requiredToken.quantity;
+            discountTokenQuantity;
+          // 消費したトークンを場に戻す処理
+          updatedState.tokens[key as TokenType].quantity =
+            updatedState.tokens[key as TokenType].quantity +
+            discountTokenQuantity;
         }
       }
 
