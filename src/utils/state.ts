@@ -149,12 +149,21 @@ export const evolvePokemon = (
     // 場から
     newState.board = removePokemonFromBoard(newState.board, pokemon.uid);
   }
-  // 進化前のポケモンの位置を取得
-  const evolveFromIndex = currentPlayer.pokemons.findIndex(
+  // 進化元のポケモンを削除
+  currentPlayer.pokemons = currentPlayer.pokemons.filter(
     (p) => p.uid !== targetUid,
   );
-  // 進化後のポケモンを差し替える
-  currentPlayer.pokemons.splice(evolveFromIndex, 1, pokemon);
+  // 進化後のポケモンを追加
+  currentPlayer.pokemons.push(pokemon);
+  // Phase の移行
+  newState.currentPhase = 'waiting-end';
+
+  return newState;
+};
+
+export const cancelEvolve = (state: GameState): GameState => {
+  const newState: GameState = JSON.parse(JSON.stringify(state));
+  newState.currentPhase = 'waiting-end';
 
   return newState;
 };

@@ -7,11 +7,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { useGameState } from '@/lib/state/useGameState';
 import { useMe } from '@/lib/state/useMe';
 import { Bookmark } from 'lucide-react';
 import { Slot } from './slot';
 
 export const ReservationSheet = () => {
+  const currentPhase = useGameState((state) => state.state.currentPhase);
   const player = useMe((state) => state.player);
 
   return (
@@ -32,7 +34,12 @@ export const ReservationSheet = () => {
 
         <div>
           {player.reservations.map((pokemon) => (
-            <Slot key={pokemon.uid} phase="action" pokemon={pokemon} />
+            <Slot
+              key={pokemon.uid}
+              phase={currentPhase}
+              pokemon={pokemon}
+              inReservation
+            />
           ))}
         </div>
       </SheetContent>

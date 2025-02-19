@@ -60,15 +60,23 @@ export const SubscribeState = ({ player }: Props) => {
       <PlayerBoard />
 
       {!isStarted && (
-        <div className="fixed inset-0 z-10 flex items-center justify-center bg-background/50">
+        <div
+          className="fixed inset-0 z-10 flex items-center justify-center bg-background/50"
+          onClick={doTurnEnd}
+          onKeyDown={doTurnEnd}
+        >
           <Button className="rounded-full" size="lg" onClick={start}>
             Start
           </Button>
         </div>
       )}
       {state.currentPhase === 'waiting-end' && (
-        <div className="fixed inset-0 z-10 flex items-center justify-center bg-background/50">
-          <Button className="rounded-full" size="lg" onClick={doTurnEnd}>
+        <div
+          className="fixed inset-0 z-10 flex items-center justify-center bg-background/50"
+          onClick={doTurnEnd}
+          onKeyDown={doTurnEnd}
+        >
+          <Button className="rounded-full" size="lg">
             End
           </Button>
         </div>

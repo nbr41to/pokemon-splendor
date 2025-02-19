@@ -13,7 +13,7 @@ export default async function Page() {
   } as RoomPlayer;
 
   return (
-    <div className="w-screen">
+    <div className="w-screen pb-52">
       <SubscribeState player={player} />
     </div>
   );

@@ -7,10 +7,11 @@ import { Store } from 'lucide-react';
 import { GetTokenForm } from './get-token-form';
 
 type Props = {
+  disabled: boolean;
   open: boolean;
   setOpen: (open: boolean) => void;
 };
-export const GetTokenFormDialog = ({ open, setOpen }: Props) => {
+export const GetTokenFormDialog = ({ disabled, open, setOpen }: Props) => {
   const state = useGameState((state) => state.state);
   const setState = useGameState((state) => state.setState);
   const playerMe = useMe((state) => state.player);
@@ -31,6 +32,7 @@ export const GetTokenFormDialog = ({ open, setOpen }: Props) => {
         size="lg"
         variant="outline"
         className="rounded-full"
+        disabled={disabled}
         onClick={() => setOpen(!open)}
       >
         <Store />

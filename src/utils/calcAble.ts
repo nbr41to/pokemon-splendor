@@ -12,11 +12,15 @@ export const calcEvolvable = (
   board: GameState['board'],
 ): boolean => {
   if (!pokemon.evolveCondition) return false;
-  const evolveToPokemons = [...board.ev1, ...board.ev2, ...board.ev3].filter(
-    (p) => p?.evolveFrom === pokemon.id,
-  );
+  // 進化後のポケモンが存在するか
+  const evolveToPokemons = [
+    ...board.ev1,
+    ...board.ev2,
+    ...board.ev3,
+    ...player.reservations,
+  ].filter((p) => p?.evolveFrom === pokemon.id);
   if (evolveToPokemons.length < 1) return false;
-
+  // 固定トークンを計算
   const fixedTokens = calcFixedTokens(player);
 
   return (
@@ -39,8 +43,13 @@ export const calcHasEvolvable = (
   return player.pokemons.some((pokemon) => {
     if (!pokemon.evolveCondition) return false;
 
-    const isExistEvolveTo = [...board.ev1, ...board.ev2, ...board.ev3].some(
-      (p) => (p?.id ? pokemon.evolveCondition?.evolveTo.includes(p.id) : false),
+    const isExistEvolveTo = [
+      ...board.ev1,
+      ...board.ev2,
+      ...board.ev3,
+      ...player.reservations,
+    ].some((p) =>
+      p?.id ? pokemon.evolveCondition?.evolveTo.includes(p.id) : false,
     );
     const {
       requiredToken: { type, quantity },

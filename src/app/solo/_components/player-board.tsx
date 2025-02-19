@@ -5,6 +5,7 @@ import { useMe } from '@/lib/state/useMe';
 import { calcEvolvable } from '@/utils/calcAble';
 import { calcScore } from '@/utils/calcScore';
 import { calcFixedTokens } from '@/utils/calcTokens';
+import { cancelEvolve } from '@/utils/state';
 import { Bookmark, Trophy } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
@@ -14,12 +15,24 @@ import { ReservationSheet } from './reservation-sheet';
 
 export const PlayerBoard = () => {
   const [openGetTokenForm, setOpenGetTokenForm] = useState(false);
-  const { board, currentPhase } = useGameState((state) => state.state);
+
+  const state = useGameState((state) => state.state);
+  const setState = useGameState((state) => state.setState);
+
   const player = useMe((state) => state.player);
+
   const isReserving = useMe((state) => state.isReserving);
   const setIsReserving = useMe((state) => state.setIsReserving);
+
+  const evolve = useEvolve((state) => state.evolve);
   const setEvolve = useEvolve((state) => state.setEvolve);
+
   const fixedTokens = useMemo(() => calcFixedTokens(player), [player]);
+
+  const handleOnCancelEvolve = () => {
+    const newState = cancelEvolve(state);
+    setState(newState);
+  };
 
   return (
     <>
@@ -32,6 +45,7 @@ export const PlayerBoard = () => {
         </div>
         <div className="space-x-2 sm:space-x-4">
           <GetTokenFormDialog
+            disabled={state.currentPhase !== 'action'}
             open={openGetTokenForm}
             setOpen={setOpenGetTokenForm}
           />
@@ -39,6 +53,9 @@ export const PlayerBoard = () => {
             size="lg"
             variant={isReserving ? 'destructive' : 'outline'}
             className="w-44 rounded-full"
+            disabled={
+              state.currentPhase !== 'action' || player.reservations.length > 2
+            }
             onClick={() => setIsReserving(!isReserving)}
           >
             <Bookmark />
@@ -81,14 +98,14 @@ export const PlayerBoard = () => {
       </div>
 
       <div className="mx-auto flex w-fit flex-wrap justify-center gap-2 py-2 sm:justify-start">
-        {player.pokemons.map((pokemon, index) => (
+        {player.pokemons.map((pokemon) => (
           <PokemonCardCarrying
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            key={index}
+            key={pokemon.uid}
             pokemon={pokemon}
+            selected={evolve?.evolveFromUid === pokemon.uid}
             disabled={
-              currentPhase !== 'evolve' ||
-              !calcEvolvable(pokemon, player, board)
+              state.currentPhase !== 'evolve' ||
+              !calcEvolvable(pokemon, player, state.board)
             }
             onClick={() => {
               if (!pokemon.evolveCondition) return;
@@ -101,6 +118,21 @@ export const PlayerBoard = () => {
           />
         ))}
       </div>
+
+      {state.currentPhase === 'evolve' && (
+        <div className="fixed bottom-0 left-0 z-10 w-full bg-background p-5">
+          <div className="mx-auto w-fit">
+            <Button
+              variant="destructive"
+              className="rounded-full"
+              disabled={state.currentPhase !== 'evolve'}
+              onClick={handleOnCancelEvolve}
+            >
+              進化しない
+            </Button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

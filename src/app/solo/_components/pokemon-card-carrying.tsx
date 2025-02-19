@@ -5,11 +5,17 @@ import Image from 'next/image';
 
 type Props = {
   pokemon: Pokemon;
+  selected: boolean;
   disabled: boolean;
   onClick: () => void;
 };
 
-export const PokemonCardCarrying = ({ pokemon, disabled, onClick }: Props) => {
+export const PokemonCardCarrying = ({
+  pokemon,
+  selected,
+  disabled,
+  onClick,
+}: Props) => {
   return (
     <button type="button" disabled={disabled} onClick={onClick}>
       <Card
@@ -17,18 +23,35 @@ export const PokemonCardCarrying = ({ pokemon, disabled, onClick }: Props) => {
           'relative flex h-[172px] min-w-36 max-w-36 flex-col items-center rounded border-2 border-background p-2 pt-4',
           !disabled && 'cursor-pointer hover:scale-105',
           pokemon.fixedTokens.red.quantity > 0 &&
-            (!disabled ? 'bg-red-400 ring-4 ring-red-500' : 'bg-red-100'),
+            (!disabled
+              ? selected
+                ? 'bg-red-400 ring-4 ring-red-500'
+                : 'bg-red-400'
+              : 'bg-red-100'),
           pokemon.fixedTokens.green.quantity > 0 &&
-            (!disabled ? 'bg-green-400 ring-4 ring-green-500' : 'bg-green-100'),
+            (!disabled
+              ? selected
+                ? 'bg-green-400 ring-4 ring-green-500'
+                : 'bg-green-400'
+              : 'bg-green-100'),
           pokemon.fixedTokens.yellow.quantity > 0 &&
             (!disabled
-              ? 'bg-yellow-400 ring-4 ring-yellow-500'
+              ? selected
+                ? 'bg-yellow-400 ring-4 ring-yellow-500'
+                : 'bg-yellow-400'
               : 'bg-yellow-100'),
           pokemon.fixedTokens.blue.quantity > 0 &&
-            (!disabled ? 'bg-blue-400 ring-4 ring-blue-500' : 'bg-blue-100'),
-          !disabled && 'cursor-pointer',
+            (!disabled
+              ? selected
+                ? 'bg-blue-400 ring-4 ring-blue-500'
+                : 'bg-blue-400'
+              : 'bg-blue-100'),
           pokemon.fixedTokens.black.quantity > 0 &&
-            (!disabled ? 'bg-gray-400 ring-4 ring-gray-600' : 'bg-gray-200'),
+            (!disabled
+              ? selected
+                ? 'bg-gray-400 ring-4 ring-gray-600'
+                : 'bg-gray-400'
+              : 'bg-gray-200'),
         )}
       >
         {pokemon.points > 0 && (
