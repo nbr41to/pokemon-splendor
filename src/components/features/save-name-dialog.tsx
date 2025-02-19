@@ -8,7 +8,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { COOKIE_NAMES } from '@/lib/cookie/names';
-import { setCookie } from '@/lib/cookie/store';
+import { getCookie, setCookie } from '@/lib/cookie/store';
+import { nanoid } from 'nanoid';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 
@@ -17,6 +18,11 @@ export const SaveNameDialog = () => {
     const name = formData.get('name');
     if (typeof name !== 'string') return;
     if (name.length > 8) return;
+
+    const playerId = await getCookie(COOKIE_NAMES.PLAYER_ID);
+    if (!playerId) {
+      setCookie(COOKIE_NAMES.PLAYER_ID, nanoid(8));
+    }
 
     setCookie(COOKIE_NAMES.PLAYER_NAME, name);
   };

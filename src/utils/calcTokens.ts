@@ -1,53 +1,54 @@
-const INITIAL_TOKENS = {
-  token1: { quantity: 0, spriteUrl: '' },
-  token2: { quantity: 0, spriteUrl: '' },
-  token3: { quantity: 0, spriteUrl: '' },
-  token4: { quantity: 0, spriteUrl: '' },
-  token5: { quantity: 0, spriteUrl: '' },
-  token6: { quantity: 0, spriteUrl: '' },
-};
+import { INITIAL_TOKENS } from '@/constants/initilalValue';
 
+/**
+ * calcFixedTokens
+ * @param player
+ * 固定トークンを計算する
+ */
 export const calcFixedTokens = (player: Player) => {
   const pokemons = player.pokemons;
   const fixedTokens = pokemons.reduce(
     (acc, pokemon) => {
-      const pokemonHasTokens = pokemon.tokens;
+      const { fixedTokens } = pokemon;
 
-      for (const token of Object.keys(pokemonHasTokens)) {
-        if (pokemonHasTokens[token as TokenKey].quantity > 0) {
-          acc[token as TokenKey] = {
-            ...acc[token as TokenKey],
-            quantity:
-              acc[token as TokenKey].quantity +
-              pokemonHasTokens[token as TokenKey].quantity,
+      for (const type of Object.keys(fixedTokens) as TokenType[]) {
+        if (fixedTokens[type].quantity > 0) {
+          acc[type] = {
+            ...acc[type],
+            quantity: acc[type].quantity + fixedTokens[type].quantity,
           };
         }
       }
 
       return acc;
     },
-    { ...INITIAL_TOKENS } as Record<TokenKey, Token>,
+    JSON.parse(JSON.stringify(INITIAL_TOKENS)) as Tokens,
   );
 
   return fixedTokens;
 };
 
+/**
+ * calcFixedTokens
+ * @param player
+ * トークンの合計を計算する
+ */
 export const calcTotalTokens = (player: Player) => {
   const fixedTokens = calcFixedTokens(player);
   const playerTokens = player.tokens;
 
   const totalTokens = Object.keys(playerTokens).reduce(
     (acc, key) => {
-      acc[key as TokenKey] = {
+      acc[key as TokenType] = {
         quantity:
-          playerTokens[key as TokenKey].quantity +
-          fixedTokens[key as TokenKey].quantity,
+          playerTokens[key as TokenType].quantity +
+          fixedTokens[key as TokenType].quantity,
         spriteUrl: '',
       };
 
       return acc;
     },
-    { ...INITIAL_TOKENS } as Record<TokenKey, Token>,
+    JSON.parse(JSON.stringify(INITIAL_TOKENS)) as Tokens,
   );
 
   return totalTokens;

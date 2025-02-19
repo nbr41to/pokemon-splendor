@@ -1,21 +1,30 @@
-import POKEMONS_EV1 from '@/constants/pokemons-ev1.json';
-import POKEMONS_EV2 from '@/constants/pokemons-ev2.json';
-import POKEMONS_EV3 from '@/constants/pokemons-ev3.json';
+import pokemonsData from '@/constants/generated/pokemons.json';
+import STAGED_POKEMON_IDS from '@/constants/staged-pokemons-0.1.json';
+
 import {
   generateEvolveToken,
+  generateFixedTokens,
   generateRequiredTokens,
-  getTokens,
 } from '@/utils/generateTokens';
+import { nanoid } from 'nanoid';
 
+const STAGED_POKEMONS = pokemonsData.filter((pokemon) =>
+  STAGED_POKEMON_IDS.includes(pokemon.id),
+);
 const POKEMONS = {
-  ev1: POKEMONS_EV1,
-  ev2: POKEMONS_EV2,
-  ev3: POKEMONS_EV3,
+  EV1: STAGED_POKEMONS.filter(
+    (pokemon) => pokemon.evolvesFrom === null && pokemon.evolvesTo,
+  ),
+  EV2: STAGED_POKEMONS.filter(
+    (pokemon) => pokemon.evolvesFrom && pokemon.evolvesTo,
+  ),
+  EV3: STAGED_POKEMONS.filter(
+    (pokemon) => pokemon.evolvesFrom && pokemon.evolvesTo === null,
+  ),
 };
-const IGNORE_EVOLUTION_IDS = [26]; // ライチュウだけ進化しない
 
 export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
-  const pokemons = POKEMONS[`ev${ev}`];
+  const pokemons = POKEMONS[`EV${ev}`];
   const pokemon = pokemons[Math.floor(Math.random() * pokemons.length)];
   const shiny = Math.random() < 0.05; // 5  % chance of shiny
   const requiredTokens = generateRequiredTokens(
@@ -24,24 +33,23 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
     ev < 3 ? 4 : 2,
   );
   const requiredTotalTokenQuantity = Object.keys(requiredTokens).reduce(
-    (acc, key) => acc + requiredTokens[key as TokenKey].quantity,
+    (acc, key) => acc + requiredTokens[key as TokenType].quantity,
     0,
   );
-  const evolutionSprites = [
-    ...POKEMONS_EV1,
-    ...POKEMONS_EV2,
-    ...POKEMONS_EV3,
-  ].find((pokemons) => pokemons.id === pokemon.id + 1)?.sprites;
-  const evolution =
-    ev !== 3 && !IGNORE_EVOLUTION_IDS.includes(pokemon.id)
+
+  const evolveCondition =
+    pokemon.evolvesTo && ev !== 3
       ? {
-          id: pokemon.id + 1,
-          spriteUrl: evolutionSprites?.officialArtwork.default as string,
-          requiredToken: generateEvolveToken(ev) as EvolutionRequiredToken,
+          evolveTo: pokemon.evolvesTo,
+          spriteUrl: STAGED_POKEMONS.find(
+            (pokemons) => pokemons.id === pokemon.evolvesTo[0],
+          )?.sprites.officialArtwork.default as string,
+          requiredToken: generateEvolveToken(ev),
         }
       : null;
 
   return {
+    uid: nanoid(10),
     id: pokemon.id,
     name: pokemon.name.ja,
     points:
@@ -54,7 +62,8 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
       ? pokemon.sprites.officialArtwork.shiny
       : pokemon.sprites.officialArtwork.default,
     requiredTokens: generateRequiredTokens(ev * 3, ev * 3 + ev, ev < 3 ? 4 : 2),
-    tokens: getTokens(ev < 3 ? 1 : 2),
-    evolution: evolution,
+    fixedTokens: generateFixedTokens(ev < 3 ? 1 : 2, pokemon.types),
+    evolveFrom: pokemon.evolvesFrom,
+    evolveCondition: evolveCondition,
   };
 };

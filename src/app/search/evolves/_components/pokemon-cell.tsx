@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -15,8 +17,7 @@ import Image from 'next/image';
 type Props = {
   pokemon: (typeof pokemonsData)[number];
 };
-
-export const PokemonDetailDialog = ({ pokemon }: Props) => {
+export const PokemonCell = ({ pokemon }: Props) => {
   const addPokemon = useStagedPokemons((state) => state.addPokemon);
   const copyJsonToClipboard = () => {
     navigator.clipboard.writeText(JSON.stringify(pokemon, null, 2));
@@ -24,11 +25,11 @@ export const PokemonDetailDialog = ({ pokemon }: Props) => {
 
   return (
     <Dialog>
-      <DialogTrigger className="flex w-40 items-center gap-2 border-b border-r">
-        <Image src={pokemon.sprites.default} width={60} height={60} alt="" />
+      <DialogTrigger className="flex w-40 min-w-40 items-center">
+        <Image src={pokemon.sprites.default} width={80} height={80} alt="" />
         <div className="space-y-1">
-          <div className="text-xs">{pokemon.name.entity}</div>
-          <div className="text-sm">{pokemon.name.ja}</div>
+          <div className="text-left text-sm">{pokemon.name.entity}</div>
+          <div className="text-left">{pokemon.name.ja}</div>
         </div>
       </DialogTrigger>
 

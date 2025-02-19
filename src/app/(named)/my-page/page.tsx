@@ -6,9 +6,11 @@ import { Search } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function Page() {
+  const playerId = await getCookie(COOKIE_NAMES.PLAYER_ID);
   const playerName = await getCookie(COOKIE_NAMES.PLAYER_NAME);
   const deleteName = async () => {
     'use server';
+    await deleteCookie(COOKIE_NAMES.PLAYER_ID);
     await deleteCookie(COOKIE_NAMES.PLAYER_NAME);
   };
 
@@ -28,22 +30,32 @@ export default async function Page() {
   return (
     <div className="p-10">
       <h1>マイページ（デバック用）</h1>
+      <p>id: {playerId}</p>
       <div className="flex items-center gap-x-4">
         <p>name: {playerName}</p>
         <Button size="sm" onClick={deleteName}>
-          名前を消す
+          IDと名前を消す
         </Button>
       </div>
       <Button disabled onClick={saveJson}>
         saveJson
       </Button>
 
-      <Button asChild>
-        <Link href="/search">
-          <Search />
-          検索
-        </Link>
-      </Button>
+      <div className="flex gap-x-4">
+        <Button asChild>
+          <Link href="/search">
+            <Search />
+            ポケモン関連検索
+          </Link>
+        </Button>
+
+        <Button asChild>
+          <Link href="/search">
+            <Search />
+            進化系統一覧
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }

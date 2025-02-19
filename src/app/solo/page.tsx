@@ -1,17 +1,20 @@
-'use client';
+import { COOKIE_NAMES } from '@/lib/cookie/names';
+import { getCookie } from '@/lib/cookie/store';
+import { SubscribeState } from './_components/subscribe-state';
 
-import { PlayerBoard } from './_components/PlayerBoard';
-import { PokemonsBoard } from './_components/PokemonsBoard';
-import { TokensBoard } from './_components/TokensBoard';
+export default async function Page() {
+  const playerId = await getCookie(COOKIE_NAMES.PLAYER_ID);
+  const playerName = await getCookie(COOKIE_NAMES.PLAYER_NAME);
 
-export default function Page() {
+  const player = {
+    id: playerId,
+    name: playerName,
+    isReady: false,
+  } as RoomPlayer;
+
   return (
-    <div className="">
-      <PokemonsBoard phase="action" />
-      <div>
-        <TokensBoard />
-        <PlayerBoard />
-      </div>
+    <div className="mx-auto w-fit">
+      <SubscribeState player={player} />
     </div>
   );
 }

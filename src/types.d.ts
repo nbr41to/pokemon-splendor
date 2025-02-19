@@ -1,62 +1,73 @@
-type TokenKey = 'token1' | 'token2' | 'token3' | 'token4' | 'token5' | 'token6';
-type TokenType =
-  | 'token1'
-  | 'token2'
-  | 'token3'
-  | 'token4'
-  | 'token5'
-  | 'token6';
+type TokenType = 'red' | 'blue' | 'green' | 'yellow' | 'black' | 'gold';
 type Token = {
-  // type: TokenType;
   quantity: number;
   spriteUrl: string;
 };
-type EvolutionRequiredToken = {
-  key: TokenKey;
-  quantity: number;
-  spriteUrl: string;
+type Tokens = Record<TokenType, Token>;
+type EvolutionRequiredToken = Token & {
+  type: TokenType;
 };
 
 type Pokemon = {
+  uid: string;
   id: number;
   name: string;
   spriteUrl: string;
-  requiredTokens: Record<TokenKey, Token>;
-  tokens: Record<TokenKey, Token>;
   points: number;
-  evolution: {
-    id: number;
-    spriteUrl: string;
+  fixedTokens: Tokens;
+  requiredTokens: Tokens;
+  evolveFrom: number | null;
+  evolveCondition: {
+    evolveTo: number[];
     requiredToken: EvolutionRequiredToken;
+    spriteUrl: string;
   } | null;
 };
 
 type Player = {
-  id: number;
+  id: string;
   name: string;
-  score: number;
   pokemons: Pokemon[];
-  tokens: Record<TokenKey, Token>;
+  tokens: Tokens;
   reservations: Pokemon[];
 };
 
-type Phase = 'action' | 'evolve';
+type Phase = 'action' | 'evolve' | 'waiting-end';
 type GameState = {
-  id: number;
+  id: string;
   players: Player[];
   board: {
     ev1: (Pokemon | null)[];
     ev2: (Pokemon | null)[];
     ev3: (Pokemon | null)[];
   };
-  tokens: Record<TokenKey, Token>;
-  currentPlayer: Player;
+  tokens: Tokens;
   currentPhase: Phase;
-  winner: Player | null;
+  // currentPlayer: Player;
+  // winner: Player | null;
+};
+
+type RoomPlayer = {
+  id: string;
+  name: string;
+  isReady: boolean;
+};
+type Room = {
+  id: string;
+  name: string;
+  ownerId: string;
+  players: RoomPlayer[];
 };
 
 /* GM */
 type StagedPokemon = {
   id: number;
   name: number;
+};
+
+/* DB */
+type Game = {
+  id: string;
+  room: Room;
+  gameState: GameState;
 };
