@@ -15,16 +15,14 @@ export const provideBoardPokemon = (
       newBoard.ev1[index] = generatePokemon(1);
     }
   }
-
   for (const index in newBoard.ev2) {
     if (newBoard.ev2[index] === null) {
       newBoard.ev2[index] = generatePokemon(2);
     }
   }
-
   for (const index in newBoard.ev3) {
     if (newBoard.ev3[index] === null) {
-      newBoard.ev3[index] = generatePokemon(3);
+      newBoard.ev3[index] = generatePokemon(3); // 一定の確率で非進化ポケモンが抽選される
     }
   }
 

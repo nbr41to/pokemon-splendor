@@ -39,6 +39,8 @@ export const getTokenTypeFromTypes = (types: string[]) => {
   if (!isPure) return generateRandomTokenType();
 
   switch (type) {
+    case 'normal':
+      return TOKEN.RED.TYPE;
     case 'fire':
       return TOKEN.RED.TYPE;
     case 'fighting':
@@ -47,6 +49,10 @@ export const getTokenTypeFromTypes = (types: string[]) => {
       return TOKEN.GREEN.TYPE;
     case 'poison':
       return TOKEN.GREEN.TYPE;
+    case 'fairy':
+      return TOKEN.GREEN.TYPE;
+    case 'psychic':
+      return TOKEN.BLUE.TYPE;
     case 'dragon':
       return TOKEN.BLUE.TYPE;
     case 'bug':

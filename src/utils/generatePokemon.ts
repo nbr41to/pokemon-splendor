@@ -1,5 +1,6 @@
 import pokemonsData from '@/constants/generated/pokemons.json';
 import STAGED_POKEMON_IDS from '@/constants/staged-pokemons-0.1.json';
+import TOKEN from '@/constants/token.json';
 
 import {
   generateEvolveToken,
@@ -21,10 +22,16 @@ const POKEMONS = {
   EV3: STAGED_POKEMONS.filter(
     (pokemon) => pokemon.evolvesFrom && pokemon.evolvesTo === null,
   ),
+  OTHERS: STAGED_POKEMONS.filter(
+    (pokemon) => pokemon.evolvesFrom === null && pokemon.evolvesTo === null,
+  ),
 };
 
 export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
-  const pokemons = POKEMONS[`EV${ev}`];
+  // evが3のときに非進化のポケモンの抽選
+  const isLegendary =
+    POKEMONS.OTHERS.length > 0 && ev === 3 ? Math.random() < 0.1 : false; // 10 % chance of legendary
+  const pokemons = isLegendary ? POKEMONS.OTHERS : POKEMONS[`EV${ev}`];
   const pokemon = pokemons[Math.floor(Math.random() * pokemons.length)];
   const shiny = Math.random() < 0.05; // 5  % chance of shiny
   const requiredTokens = generateRequiredTokens(
@@ -36,7 +43,6 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
     (acc, key) => acc + requiredTokens[key as TokenType].quantity,
     0,
   );
-
   const evolveToPokemon = STAGED_POKEMONS.find(
     (p) => p.evolvesFrom === pokemon.id,
   );
@@ -57,6 +63,13 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
           requiredToken: generateEvolveToken(ev),
         }
       : null;
+
+  if (isLegendary) {
+    requiredTokens.gold = {
+      quantity: 1,
+      spriteUrl: TOKEN.GOLD.SPRITE_URL,
+    };
+  }
 
   return {
     uid: nanoid(10),
@@ -79,8 +92,10 @@ export const generatePokemon = (ev: 1 | 2 | 3): Pokemon => {
         shiny: pokemon.sprites.officialArtwork.shiny,
       },
     },
-    requiredTokens: generateRequiredTokens(ev * 3, ev * 3 + ev, ev < 3 ? 4 : 2),
-    fixedTokens: generateFixedTokens(ev < 3 ? 1 : 2, pokemon.types),
+    requiredTokens: requiredTokens,
+    fixedTokens: isLegendary
+      ? generateFixedTokens(2, pokemon.types)
+      : generateFixedTokens(1, pokemon.types),
     evolveFrom: pokemon.evolvesFrom,
     evolveCondition: evolveCondition,
   };

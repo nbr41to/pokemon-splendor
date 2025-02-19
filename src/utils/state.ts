@@ -1,3 +1,4 @@
+import { addGetCollection } from '@/lib/cookie/collection';
 import { provideBoardPokemon, removePokemonFromBoard } from './board';
 import { calcHasEvolvable } from './calcAble';
 import { calcFixedTokens } from './calcTokens';
@@ -119,6 +120,9 @@ export const getPokemon = (
   newState.currentPhase = calcHasEvolvable(currentPlayer, newState.board)
     ? 'evolve'
     : 'waiting-end';
+
+  // 図鑑の登録
+  addGetCollection(pokemon.id);
 
   return newState;
 };

@@ -89,10 +89,9 @@ export const PokemonCardCarrying = ({
         </div>
 
         <div className="w-full">
-          <div className="grid place-content-center rounded bg-background p-1">
+          <div className="grid place-content-center rounded bg-background">
             <Image
               className={cn(
-                'bg-background p-1',
                 isDefaultSprite
                   ? !pokemon.evolveFrom && pokemon.evolveCondition
                     ? 'scale-150'
