@@ -36,14 +36,18 @@ export const PlayerBoard = () => {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-2 bg-background p-5 sm:gap-4 sm:rounded">
-        <div className="flex items-center">
-          <Trophy size={24} className="m-2 stroke-blue-700" />
-          <span className="font-mono text-xl font-bold text-blue-700">
-            {calcScore(player.pokemons)}
-          </span>
+      <div className="bg-background p-5">
+        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-4 sm:rounded">
+          <div className="flex items-center">
+            <Trophy size={24} className="m-2 stroke-blue-700" />
+            <span className="font-mono text-xl font-bold text-blue-700">
+              {calcScore(player.pokemons)}
+            </span>
+          </div>
+          <ReservationSheet />
         </div>
-        <div className="space-x-2 sm:space-x-4">
+
+        <div className="flex flex-wrap items-center justify-center space-x-2 space-y-2 sm:gap-x-4 sm:space-x-0 sm:space-y-0">
           <GetTokenFormDialog
             disabled={state.currentPhase !== 'action'}
             open={openGetTokenForm}
@@ -61,7 +65,6 @@ export const PlayerBoard = () => {
             <Bookmark />
             {isReserving ? '予約をやめる' : '予約をする'}
           </Button>
-          <ReservationSheet />
         </div>
       </div>
 
