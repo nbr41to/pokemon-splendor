@@ -1,16 +1,19 @@
-import { generatePokemon } from './generatePokemon';
+import { provideBoardPokemon, removePokemonFromBoard } from './board';
+import { calcHasEvolvable } from './calcAble';
+import { calcFixedTokens } from './calcTokens';
 
 // GameState を渡すだけで、なにかしらの変更後の GameState を返す utils 関数
 
 /**
+ * GameState
  * startGame
  * Game を開始する
  */
 export const startGame = (state: GameState): GameState => {
-  let newState: GameState = JSON.parse(JSON.stringify(state));
+  const newState: GameState = JSON.parse(JSON.stringify(state));
 
   // ポケモンの補充
-  newState = provideBoardPokemon(newState);
+  newState.board = provideBoardPokemon(newState.board);
 
   // プレイヤーのシャッフル
   newState.players = newState.players.sort(() => Math.random() - 0.5);
@@ -25,29 +28,148 @@ export const startGame = (state: GameState): GameState => {
 };
 
 /**
- * provideBoardPokemon
- * null の slot にポケモンを追加
+ * GameState
+ * getTokens
+ * トークンをもらう
  */
-export const provideBoardPokemon = (state: GameState): GameState => {
-  const board = { ...state.board };
+export const getTokens = (
+  state: GameState,
+  tokenTypes: TokenType[],
+): GameState => {
+  const newState: GameState = JSON.parse(JSON.stringify(state));
+  const currentPlayer = newState.players[0];
 
-  for (const index in board.ev1) {
-    if (board.ev1[index] === null) {
-      board.ev1[index] = generatePokemon(1);
+  // トークンの追加
+  for (const tokenType of tokenTypes) {
+    currentPlayer.tokens[tokenType].quantity += 1;
+    newState.tokens[tokenType].quantity -= 1;
+  }
+  // Phase の移行
+  newState.currentPhase = calcHasEvolvable(currentPlayer, newState.board)
+    ? 'evolve'
+    : 'waiting-end';
+
+  return newState;
+};
+
+/**
+ * GameState
+ * reservePokemon
+ * ポケモンを予約する
+ */
+export const reservePokemon = (
+  state: GameState,
+  pokemon: Pokemon,
+): GameState => {
+  const newState: GameState = JSON.parse(JSON.stringify(state));
+  const currentPlayer = newState.players[0];
+
+  // ポケモンを予約リストに追加
+  currentPlayer.reservations.push(pokemon);
+  // ポケモンを場から削除
+  newState.board = removePokemonFromBoard(newState.board, pokemon.uid);
+  // gold トークンの追加
+  currentPlayer.tokens.gold.quantity += 1;
+  // Phase の移行
+  newState.currentPhase = calcHasEvolvable(currentPlayer, newState.board)
+    ? 'evolve'
+    : 'waiting-end';
+
+  return newState;
+};
+
+/**
+ * GameState
+ * getPokemon
+ * ポケモンをゲットする
+ */
+export const getPokemon = (
+  state: GameState,
+  pokemon: Pokemon,
+  inReservation = false,
+): GameState => {
+  const newState: GameState = JSON.parse(JSON.stringify(state));
+  const currentPlayer = newState.players[0];
+  const currentPlayerFixedTokens = calcFixedTokens(currentPlayer);
+
+  // トークンの消費
+  for (const key of Object.keys(pokemon.requiredTokens) as TokenType[]) {
+    const requiredToken = pokemon.requiredTokens[key];
+    const discountTokenQuantity =
+      requiredToken.quantity - currentPlayerFixedTokens[key].quantity || 0;
+
+    if (discountTokenQuantity > 0) {
+      currentPlayer.tokens[key].quantity -= discountTokenQuantity;
+      newState.tokens[key].quantity += discountTokenQuantity;
     }
   }
-
-  for (const index in board.ev2) {
-    if (board.ev2[index] === null) {
-      board.ev2[index] = generatePokemon(2);
-    }
+  // ポケモンをプレイヤーに追加
+  currentPlayer.pokemons.push(pokemon);
+  // ポケモンを削除
+  if (inReservation) {
+    // 予約リストから
+    currentPlayer.reservations = currentPlayer.reservations.filter(
+      (p) => p.uid !== pokemon.uid,
+    );
+  } else {
+    // 場から
+    newState.board = removePokemonFromBoard(newState.board, pokemon.uid);
   }
+  // Phase の移行
+  newState.currentPhase = calcHasEvolvable(currentPlayer, newState.board)
+    ? 'evolve'
+    : 'waiting-end';
 
-  for (const index in board.ev3) {
-    if (board.ev3[index] === null) {
-      board.ev3[index] = generatePokemon(3);
-    }
+  return newState;
+};
+
+/**
+ * GameState
+ * evolvePokemon
+ * @pokemon 進化先のポケモン
+ * @targetUid 進化元のポケモンの uid
+ * ポケモンを進化する
+ */
+export const evolvePokemon = (
+  state: GameState,
+  pokemon: Pokemon,
+  targetUid: string,
+  inReservation = false,
+): GameState => {
+  const newState: GameState = JSON.parse(JSON.stringify(state));
+  const currentPlayer = newState.players[0];
+
+  // ポケモンを削除
+  if (inReservation) {
+    // 予約リストから
+    currentPlayer.reservations = currentPlayer.reservations.filter(
+      (p) => p.uid !== pokemon.uid,
+    );
+  } else {
+    // 場から
+    newState.board = removePokemonFromBoard(newState.board, pokemon.uid);
   }
+  // 進化前のポケモンの位置を取得
+  const evolveFromIndex = currentPlayer.pokemons.findIndex(
+    (p) => p.uid !== targetUid,
+  );
+  // 進化後のポケモンを差し替える
+  currentPlayer.pokemons.splice(evolveFromIndex, 1, pokemon);
 
-  return { ...state, board };
+  return newState;
+};
+
+/**
+ * GameState
+ * turnEnd
+ * ターンエンド
+ */
+export const turnEnd = (state: GameState): GameState => {
+  const newState: GameState = JSON.parse(JSON.stringify(state));
+  // ポケモンの補充
+  newState.board = provideBoardPokemon(newState.board);
+  // Phase の初期化
+  newState.currentPhase = 'action';
+
+  return newState;
 };

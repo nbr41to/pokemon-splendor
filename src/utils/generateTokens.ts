@@ -5,6 +5,11 @@ const TOKEN_TYPES = Object.values(TOKEN)
   .map(({ TYPE }) => TYPE as TokenType)
   .slice(0, 5) as TokenType[]; // goldの除外
 
+const generateRandomTokenType = (): TokenType => {
+  const { TYPE } = TOKENS[Math.floor(Math.random() * TOKENS.length)];
+  return TYPE as TokenType;
+};
+
 export const generateFixedTokens = (
   quantity: 1 | 2,
   types: string[],
@@ -29,10 +34,13 @@ export const generateFixedTokens = (
 
 export const getTokenTypeFromTypes = (types: string[]) => {
   const type = types[Math.floor(Math.random() * types.length)];
+  const isPure = Math.random() < 0.6; // 純粋に割り当てられる割合
+
+  if (!isPure) return generateRandomTokenType();
 
   switch (type) {
     case 'fire':
-      return TOKEN.RED.TYPE; // 各タイプ2種類のトークンがランダムで割り当てられるようにしたい
+      return TOKEN.RED.TYPE;
     case 'fighting':
       return TOKEN.RED.TYPE;
     case 'grass':

@@ -8,9 +8,8 @@ type Props = {
   size?: 'sm' | 'md';
   phase?: Phase;
   pokemon: Pokemon | null;
+  disabled: boolean;
   onClick: () => void;
-  getable?: boolean;
-  evolvable: boolean;
 };
 
 export const PokemonCard = ({
@@ -18,55 +17,46 @@ export const PokemonCard = ({
   phase,
   pokemon,
   onClick,
-  getable = false,
-  evolvable,
+  disabled,
 }: Props) => {
   const sizeClasses = size === 'sm' ? 'h-56 min-w-48' : 'h-[340px] w-60';
 
   if (!pokemon)
     return (
-      <Card className="m-1 shadow-md">
-        <div className="m-1 h-[140px] min-w-24 max-w-24 sm:h-56 sm:min-w-48 sm:max-w-48" />
-      </Card>
+      <div className="m-0.5 sm:m-1">
+        <Card className="h-[144px] min-w-24 max-w-24 sm:h-[230px] sm:min-w-48 sm:max-w-48" />
+      </div>
     );
 
   return (
-    <Card key={pokemon.id} className="m-1 shadow-md">
-      <button
-        type="button"
+    <button
+      className="m-0.5 sm:m-1"
+      type="button"
+      disabled={disabled}
+      onClick={() => onClick()}
+    >
+      <Card
         className={cn(
-          'relative m-0.5 flex h-[140px] min-w-24 max-w-24 flex-col rounded-md p-1 pt-3 sm:m-1 sm:h-[222px] sm:min-w-48 sm:max-w-48 sm:p-2 sm:pt-6',
-          (getable || evolvable) && 'cursor-pointer hover:scale-105',
+          'relative flex h-[144px] min-w-24 max-w-24 flex-col rounded-md border-2 border-background p-1 pt-3 shadow-md sm:h-[230px] sm:min-w-48 sm:max-w-48 sm:border-4 sm:p-2 sm:pt-6',
+          !disabled && 'cursor-pointer transition-transform hover:scale-[1.03]',
           pokemon.fixedTokens.red.quantity > 0 &&
-            (getable || evolvable
-              ? 'bg-red-300 ring-2 ring-red-400'
-              : 'bg-red-50'),
+            (disabled ? 'bg-red-100' : 'bg-red-400'),
           pokemon.fixedTokens.green.quantity > 0 &&
-            (getable || evolvable
-              ? 'bg-green-300 ring-2 ring-green-400'
-              : 'bg-green-50'),
+            (disabled ? 'bg-green-100' : 'bg-green-400'),
           pokemon.fixedTokens.yellow.quantity > 0 &&
-            (getable || evolvable
-              ? 'bg-yellow-300 ring-2 ring-yellow-400'
-              : 'bg-yellow-50'),
+            (disabled ? 'bg-yellow-100' : 'bg-yellow-400'),
           pokemon.fixedTokens.blue.quantity > 0 &&
-            (getable || evolvable
-              ? 'bg-blue-300 ring-2 ring-blue-400'
-              : 'bg-blue-50'),
+            (disabled ? 'bg-blue-100' : 'bg-blue-400'),
           pokemon.fixedTokens.black.quantity > 0 &&
-            (getable || evolvable
-              ? 'bg-gray-500 ring-2 ring-gray-700'
-              : 'bg-gray-300'),
+            (disabled ? 'bg-gray-200' : 'bg-gray-400'),
         )}
-        disabled={!getable && !evolvable}
-        onClick={() => onClick()}
       >
         {pokemon.points > 0 && (
-          <div className="absolute left-0 top-0 grid size-6 place-content-center rounded-full border bg-background font-sans font-bold text-blue-700 sm:left-1 sm:top-1 sm:size-8 sm:text-xl">
+          <div className="absolute left-0 top-0 z-10 grid size-6 place-content-center rounded-full border bg-background font-sans font-bold text-blue-700 sm:left-1 sm:top-1 sm:size-8 sm:text-xl">
             {pokemon.points}
           </div>
         )}
-        <div className="absolute right-2 top-0 flex w-full items-center justify-end sm:right-3">
+        <div className="absolute right-2 top-0 z-10 flex w-full items-center justify-end sm:right-3">
           {Object.values(pokemon.fixedTokens).map((token) => {
             const { quantity, spriteUrl } = token;
             if (quantity < 1) return null;
@@ -96,7 +86,12 @@ export const PokemonCard = ({
         </div>
 
         <div className="w-full">
-          <div className="grid place-content-center rounded-sm bg-background p-1 sm:rounded">
+          <div
+            className={cn(
+              'grid place-content-center rounded-sm bg-background p-1 sm:rounded',
+              disabled && 'grayscale',
+            )}
+          >
             <Image
               className="block sm:hidden"
               src={pokemon.spriteUrl}
@@ -115,7 +110,7 @@ export const PokemonCard = ({
         </div>
 
         {/* requiredTokens */}
-        <div className="-mx-2 -mt-2 flex sm:-mx-1 sm:mt-0 sm:gap-1 sm:py-1">
+        <div className="z-10 -mx-2 -mt-2 flex sm:-mx-1 sm:mt-0 sm:gap-1 sm:py-1">
           {Object.keys(pokemon.requiredTokens).map((key) => {
             const token = pokemon.requiredTokens[key as TokenType];
             if (token.quantity < 1) return null;
@@ -145,13 +140,13 @@ export const PokemonCard = ({
         </div>
 
         <div className="flex w-full grow items-end sm:justify-between">
-          <div className="hidden text-xs font-bold text-neutral-600 sm:block">
+          <div className="-m-1 hidden whitespace-pre text-xs font-bold text-neutral-600 sm:block">
             {pokemon.name}
           </div>
 
           {/* Evolution */}
           {pokemon.evolveCondition && (
-            <div className="flex h-full w-full items-center justify-between gap-x-1 rounded border bg-background px-0.5 py-1 sm:w-28">
+            <div className="flex h-full w-full items-center justify-between gap-x-1 rounded border bg-background px-0.5 py-1 sm:w-[104px]">
               <div className="flex items-center">
                 <Image
                   className="block sm:hidden"
@@ -176,23 +171,15 @@ export const PokemonCard = ({
               </div>
               <ChevronsRight size={14} />
               <Image
-                className="block sm:hidden"
                 src={pokemon.evolveCondition.spriteUrl}
                 width={32}
                 height={32}
                 alt=""
               />
-              <Image
-                className="hidden sm:block"
-                src={pokemon.evolveCondition.spriteUrl}
-                width={36}
-                height={36}
-                alt=""
-              />
             </div>
           )}
         </div>
-      </button>
-    </Card>
+      </Card>
+    </button>
   );
 };

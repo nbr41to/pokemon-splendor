@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { useGameState } from '@/lib/state/useGameState';
 import { useMe } from '@/lib/state/useMe';
-import { calcHasEvolvable } from '@/utils/calcAble';
 import { calcFixedTokens } from '@/utils/calcTokens';
+import { getTokens } from '@/utils/state';
 import { Store } from 'lucide-react';
 import { GetTokenForm } from './get-token-form';
 
@@ -17,29 +17,10 @@ export const GetTokenFormDialog = ({ open, setOpen }: Props) => {
   const setMe = useMe((state) => state.setMe);
 
   const handleOnSubmit = (types: TokenType[]) => {
-    const newState = { ...state };
-    const newPlayer = { ...playerMe };
+    const newState = getTokens(state, types);
 
-    const newPublicTokens = { ...state.tokens };
-    const newHasTokens = { ...playerMe.tokens };
-
-    for (const type of types) {
-      newHasTokens[type].quantity += 1;
-      newPublicTokens[type].quantity -= 1;
-    }
-
-    newState.currentPhase = calcHasEvolvable(newPlayer, newState.board)
-      ? 'evolve'
-      : 'waiting-end';
-
-    setState({
-      ...newState,
-      tokens: newPublicTokens,
-    });
-    setMe({
-      ...newPlayer,
-      tokens: newHasTokens,
-    });
+    setState(newState);
+    setMe(newState.players[0]);
 
     setOpen(false);
   };

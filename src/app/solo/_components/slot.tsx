@@ -4,17 +4,21 @@ import { useMe } from '@/lib/state/useMe';
 import { removePokemonFromBoard } from '@/utils/board';
 import { calcHasEvolvable } from '@/utils/calcAble';
 import { calcFixedTokens, calcTotalTokens } from '@/utils/calcTokens';
+import { reservePokemon } from '@/utils/state';
 import { useMemo } from 'react';
 import { PokemonCard } from './pokemon-card';
 
 type Props = {
   phase: Phase;
   pokemon: Pokemon | null;
+  inReservation?: boolean;
 };
-export const Slot = ({ phase, pokemon }: Props) => {
+export const Slot = ({ phase, pokemon, inReservation = false }: Props) => {
   const state = useGameState((state) => state.state);
   const setState = useGameState((state) => state.setState);
   const player = useMe((state) => state.player);
+  const isReserving = useMe((state) => state.isReserving);
+  const setIsReserving = useMe((state) => state.setIsReserving);
   const setMe = useMe((state) => state.setMe);
   const evolveCondition = useEvolve((state) => state.evolve);
 
@@ -42,6 +46,13 @@ export const Slot = ({ phase, pokemon }: Props) => {
 
   const handleOnClick = () => {
     if (!pokemon) return;
+    if (isReserving) {
+      const newState = reservePokemon(state, pokemon);
+      setState(newState);
+      setMe(newState.players[0]);
+      setIsReserving(false);
+      return;
+    }
 
     const updatedState = { ...state };
     const updatedPlayer = { ...player };
@@ -98,8 +109,7 @@ export const Slot = ({ phase, pokemon }: Props) => {
   return (
     <PokemonCard
       pokemon={pokemon}
-      getable={getable}
-      evolvable={evolvable}
+      disabled={(!getable && !evolvable) || inReservation}
       onClick={handleOnClick}
     />
   );

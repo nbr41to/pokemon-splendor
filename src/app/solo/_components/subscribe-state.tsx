@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { INITIAL_TOKENS } from '@/constants/initilalValue';
 import { useGameState } from '@/lib/state/useGameState';
 import { useMe } from '@/lib/state/useMe';
-import { provideBoardPokemon, startGame } from '@/utils/state';
+import { startGame, turnEnd } from '@/utils/state';
 import { nanoid } from 'nanoid';
 import { Board } from './board';
 import { PlayerBoard } from './player-board';
@@ -45,8 +45,8 @@ export const SubscribeState = ({ player }: Props) => {
     setMe(initialPlayer);
   };
 
-  const turnEnd = () => {
-    const updatedState = provideBoardPokemon(state);
+  const doTurnEnd = () => {
+    const updatedState = turnEnd(state);
     // オンラインではプレイヤーの順番を変える処理が必要
     setState({
       ...updatedState,
@@ -60,15 +60,15 @@ export const SubscribeState = ({ player }: Props) => {
       <PlayerBoard />
 
       {!isStarted && (
-        <div className="fixed inset-0 flex items-center justify-center bg-background/50">
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-background/50">
           <Button className="rounded-full" size="lg" onClick={start}>
             Start
           </Button>
         </div>
       )}
       {state.currentPhase === 'waiting-end' && (
-        <div className="fixed inset-0 flex items-center justify-center bg-background/50">
-          <Button className="rounded-full" size="lg" onClick={turnEnd}>
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-background/50">
+          <Button className="rounded-full" size="lg" onClick={doTurnEnd}>
             End
           </Button>
         </div>

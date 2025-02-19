@@ -5,34 +5,31 @@ import Image from 'next/image';
 
 type Props = {
   pokemon: Pokemon;
-  evolvable: boolean;
+  disabled: boolean;
   onClick: () => void;
 };
 
-export const PokemonCardCarrying = ({ pokemon, evolvable, onClick }: Props) => {
+export const PokemonCardCarrying = ({ pokemon, disabled, onClick }: Props) => {
   return (
-    <Card key={pokemon.id}>
-      <button
-        type="button"
+    <button type="button" disabled={disabled} onClick={onClick}>
+      <Card
         className={cn(
-          'relative m-1 flex min-w-36 max-w-36 flex-col items-center rounded p-2 pt-4',
-          evolvable && 'cursor-pointer hover:scale-105',
+          'relative flex h-[172px] min-w-36 max-w-36 flex-col items-center rounded border-2 border-background p-2 pt-4',
+          !disabled && 'cursor-pointer hover:scale-105',
           pokemon.fixedTokens.red.quantity > 0 &&
-            (evolvable ? 'bg-red-200 ring-2 ring-red-500' : 'bg-red-50'),
+            (!disabled ? 'bg-red-400 ring-4 ring-red-500' : 'bg-red-100'),
           pokemon.fixedTokens.green.quantity > 0 &&
-            (evolvable ? 'bg-green-200 ring-2 ring-green-500' : 'bg-green-50'),
+            (!disabled ? 'bg-green-400 ring-4 ring-green-500' : 'bg-green-100'),
           pokemon.fixedTokens.yellow.quantity > 0 &&
-            (evolvable
-              ? 'bg-yellow-200 ring-2 ring-yellow-500'
-              : 'bg-yellow-50'),
+            (!disabled
+              ? 'bg-yellow-400 ring-4 ring-yellow-500'
+              : 'bg-yellow-100'),
           pokemon.fixedTokens.blue.quantity > 0 &&
-            (evolvable ? 'bg-blue-200 ring-2 ring-blue-500' : 'bg-blue-50'),
-          evolvable && 'cursor-pointer',
+            (!disabled ? 'bg-blue-400 ring-4 ring-blue-500' : 'bg-blue-100'),
+          !disabled && 'cursor-pointer',
           pokemon.fixedTokens.black.quantity > 0 &&
-            (evolvable ? 'bg-gray-400 ring-2 ring-gray-600' : 'bg-gray-200'),
+            (!disabled ? 'bg-gray-400 ring-4 ring-gray-600' : 'bg-gray-200'),
         )}
-        disabled={!evolvable}
-        onClick={onClick}
       >
         {pokemon.points > 0 && (
           <div className="absolute left-1 top-1 grid size-8 place-content-center rounded-full border bg-background font-mono text-xl font-bold text-blue-700">
@@ -94,7 +91,7 @@ export const PokemonCardCarrying = ({ pokemon, evolvable, onClick }: Props) => {
             />
           </div>
         )}
-      </button>
-    </Card>
+      </Card>
+    </button>
   );
 };

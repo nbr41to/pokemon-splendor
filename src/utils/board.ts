@@ -1,3 +1,36 @@
+import { generatePokemon } from './generatePokemon';
+
+/**
+ * Board
+ * provideBoardPokemon
+ * null の slot にポケモンを追加
+ */
+export const provideBoardPokemon = (
+  board: GameState['board'],
+): GameState['board'] => {
+  const newBoard = JSON.parse(JSON.stringify(board)) as GameState['board'];
+
+  for (const index in board.ev1) {
+    if (board.ev1[index] === null) {
+      newBoard.ev1[index] = generatePokemon(1);
+    }
+  }
+
+  for (const index in newBoard.ev2) {
+    if (newBoard.ev2[index] === null) {
+      newBoard.ev2[index] = generatePokemon(2);
+    }
+  }
+
+  for (const index in newBoard.ev3) {
+    if (newBoard.ev3[index] === null) {
+      newBoard.ev3[index] = generatePokemon(3);
+    }
+  }
+
+  return newBoard;
+};
+
 /**
  * Boardからポケモンを取り除く
  */
