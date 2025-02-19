@@ -62,8 +62,8 @@ export const SubscribeState = ({ player }: Props) => {
       {!isStarted && (
         <div
           className="fixed inset-0 z-10 flex items-center justify-center bg-background/50"
-          onClick={doTurnEnd}
-          onKeyDown={doTurnEnd}
+          onClick={start}
+          onKeyDown={start}
         >
           <Button className="rounded-full" size="lg" onClick={start}>
             Start
