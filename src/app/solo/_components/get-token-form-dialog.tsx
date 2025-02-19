@@ -56,9 +56,15 @@ export const GetTokenFormDialog = ({ open, setOpen }: Props) => {
         道具をもらう
       </Button>
       {open && (
-        <div className="fixed bottom-0 left-0 w-full bg-background p-5">
-          <div className="mx-auto w-fit">
-            {/* <div className="mx-auto max-w-96 space-y-2 py-4">
+        <>
+          <button
+            type="button"
+            className="fixed inset-0 h-screen w-screen"
+            onClick={() => setOpen(false)}
+          />
+          <div className="fixed bottom-0 left-0 z-10 w-full bg-background p-5">
+            <div className="mx-auto w-fit">
+              {/* <div className="mx-auto max-w-96 space-y-2 py-4">
               <h3 className='"text-lg tracking-tight" font-semibold leading-none'>
                 道具をもらう
               </h3>
@@ -66,14 +72,15 @@ export const GetTokenFormDialog = ({ open, setOpen }: Props) => {
                 道具は、ポケモンをゲットするために使います。自分のターンで1度だけ、同じ道具を2つか、種類が異なる道具を3つもらうことができます。（道具をもらったターンでポケモンをゲットすることはできません。）
               </p>
             </div> */}
-            <GetTokenForm
-              publicTokens={state.tokens}
-              hasTokens={playerMe.tokens}
-              hasFixedTokens={calcFixedTokens(playerMe)}
-              onSubmit={handleOnSubmit}
-            />
+              <GetTokenForm
+                publicTokens={state.tokens}
+                hasTokens={playerMe.tokens}
+                hasFixedTokens={calcFixedTokens(playerMe)}
+                onSubmit={handleOnSubmit}
+              />
+            </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );
