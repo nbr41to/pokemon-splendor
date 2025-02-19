@@ -35,7 +35,7 @@ export const GetTokenForm = ({
   };
 
   return (
-    <div className="mx-auto w-fit select-none space-y-4">
+    <div className="select-none space-y-4">
       <div className="flex flex-wrap gap-2 sm:gap-4">
         {Object.values(TOKEN).map((value) => {
           const { TYPE, SPRITE_URL } = value;

@@ -13,7 +13,7 @@ export default async function Page() {
   } as RoomPlayer;
 
   return (
-    <div className="mx-auto w-fit">
+    <div className="w-screen">
       <SubscribeState player={player} />
     </div>
   );

@@ -25,7 +25,7 @@ export const PokemonCard = ({
   if (!pokemon) return <Card className="h-56 w-48" />;
 
   return (
-    <Card key={pokemon.id} className="shadow-md">
+    <Card key={pokemon.id} className="m-1 shadow-md">
       <button
         type="button"
         className={cn(
