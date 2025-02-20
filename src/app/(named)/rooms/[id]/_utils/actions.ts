@@ -32,46 +32,10 @@ export const toggleReady = async (formData: FormData) => {
   }
 };
 
-// TODO: FormAction に変更（したと一緒や）
-export const startGameAction = async (roomId: string, newState: GameState) => {
-  // const { data: rooms } = await supabase
-  //   .from('Rooms')
-  //   .select('*')
-  //   .eq('id', roomId);
+export const deleteRoom = async (roomId: string) => {
+  const { error } = await supabase.from('Rooms').delete().eq('id', roomId);
 
-  // if (!rooms) return;
-  // const state = rooms[0].state as RoomPlayer[];
-
-  const { data, error } = await supabase
-    .from('Rooms')
-    .update({
-      state: newState,
-    })
-    .eq('id', roomId);
-
-  if (error) return error;
-
-  return;
-};
-
-// TODO: FormAction に変更
-export const updateGameAction = async (roomId: string, newState: GameState) => {
-  // const { data: rooms } = await supabase
-  //   .from('Rooms')
-  //   .select('*')
-  //   .eq('id', roomId);
-
-  // if (!rooms) return;
-  // const state = rooms[0].state as RoomPlayer[];
-
-  const { data, error } = await supabase
-    .from('Rooms')
-    .update({
-      state: newState,
-    })
-    .eq('id', roomId);
-
-  if (error) return error;
-
-  return;
+  if (error) {
+    console.error(error);
+  }
 };

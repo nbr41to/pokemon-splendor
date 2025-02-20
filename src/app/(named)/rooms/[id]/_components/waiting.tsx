@@ -5,11 +5,11 @@ import { Card } from '@/components/ui/card';
 import { INITIAL_TOKENS } from '@/constants/initilalValue';
 import { useGameState } from '@/lib/state/useGameState';
 import { useMe } from '@/lib/state/useMe';
+import { updateGameState } from '@/lib/supabase/actions';
 import { removePlayer } from '@/utils/room';
 import { startGame } from '@/utils/state';
-import { nanoid } from 'nanoid';
 import Form from 'next/form';
-import { startGameAction, toggleReady } from '../_utils/actions';
+import { deleteRoom, toggleReady } from '../_utils/actions';
 
 type Props = {
   playerId: string;
@@ -35,7 +35,7 @@ export const Waiting = ({ playerId, room }: Props) => {
       reservations: [],
     }));
     const initialState = startGame({
-      id: nanoid(8),
+      id: room.id,
       turnCount: 1,
       players: initialPlayers,
       board: {
@@ -50,11 +50,12 @@ export const Waiting = ({ playerId, room }: Props) => {
     setState(initialState);
     setMe(initialPlayers.find((player) => player.id === playerId) as Player);
 
-    startGameAction(room.id, initialState);
+    updateGameState(room.id, initialState);
   };
 
   return (
     <div className="space-y-4">
+      <h1>{room.name}</h1>
       <div className="flex gap-2">
         {room.players.map((player) => (
           <Card key={player.id} className="p-4">
@@ -97,6 +98,14 @@ export const Waiting = ({ playerId, room }: Props) => {
       </Button>
 
       <pre>{JSON.stringify(room, null, 2)}</pre>
+
+      <Button
+        variant="destructive"
+        disabled={!isOwner}
+        onClick={() => deleteRoom(room.id)}
+      >
+        Delete Room
+      </Button>
     </div>
   );
 };

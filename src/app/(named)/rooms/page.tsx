@@ -11,7 +11,10 @@ import { RoomList } from './_components/room-list';
 export default async function Page() {
   const playerId = (await getCookie(COOKIE_NAMES.PLAYER_ID)) as string;
   const playerName = (await getCookie(COOKIE_NAMES.PLAYER_NAME)) as string;
-  const { data: rooms, error } = await supabase.from('Rooms').select('*');
+  const { data: rooms, error } = await supabase
+    .from('Rooms')
+    .select('*')
+    .is('state', null);
   const parsedRooms =
     rooms?.map((room) => ({
       ...room,

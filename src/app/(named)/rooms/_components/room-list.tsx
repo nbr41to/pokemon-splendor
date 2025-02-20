@@ -57,7 +57,11 @@ export const RoomList = ({ rooms: rawRooms, player }: Props) => {
         {rooms.map((room) => {
           const handleOnClick = async () => {
             const alreadyJoined = room.players.some((p) => p.id === player.id);
-            if (alreadyJoined) return router.push(`/rooms/${room.id}`);
+            if (alreadyJoined) {
+              router.push(`/rooms/${room.id}`);
+              return;
+            }
+
             const error = await joinRoom(room.id, player);
             if (error) return console.error(error);
 

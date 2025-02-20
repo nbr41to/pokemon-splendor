@@ -32,7 +32,6 @@ export default async function Page({
 
   return (
     <div className="flex grow flex-col items-center justify-center gap-y-8">
-      <h1 className="">部屋</h1>
       <SubscribeRoom
         playerId={playerId}
         room={parsedRoom}

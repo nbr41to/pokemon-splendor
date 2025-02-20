@@ -2,18 +2,19 @@ import { Button } from '@/components/ui/button';
 import TOKEN from '@/constants/token.json';
 import { useGameState } from '@/lib/state/useGameState';
 import { useMe } from '@/lib/state/useMe';
-import { calcFixedTokens } from '@/utils/calcTokens';
+import { updateGameState } from '@/lib/supabase/actions';
 import { cn } from '@/utils/classNames';
-import { cancelEvolve, getTokens } from '@/utils/state';
+import { cancelEvolve, getTokens, turnEnd } from '@/utils/state';
 import { Bookmark, Store, X } from 'lucide-react';
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
 import { CurrentTokensHeader } from './current-tokens-header';
 import { GotPokemons } from './got-pokemons';
 import { ReservationSheet } from './reservation-sheet';
 
 export const PlayerBoard = () => {
-  const [openGetTokenForm, setOpenGetTokenForm] = useState(false);
+  const params = useParams<{ id: string | undefined }>();
   const [isGettingToken, setIsGettingToken] = useState(false);
 
   const state = useGameState((state) => state.state);
@@ -25,18 +26,9 @@ export const PlayerBoard = () => {
   const isReserving = useMe((state) => state.isReserving);
   const setIsReserving = useMe((state) => state.setIsReserving);
 
-  const fixedTokens = useMemo(() => calcFixedTokens(player), [player]);
-
   const handleOnCancelEvolve = () => {
     const newState = cancelEvolve(state);
     setState(newState);
-  };
-
-  const handleOnSubmit = (types: TokenType[]) => {
-    const newState = getTokens(state, types);
-
-    setState(newState);
-    setMe(newState.players[0]);
   };
 
   const [selectedTokenTypes, setSelectedTokens] = useState<TokenType[]>([]);
@@ -59,6 +51,16 @@ export const PlayerBoard = () => {
 
     setSelectedTokens([]);
     setIsGettingToken(false);
+  };
+
+  const doTurnEnd = () => {
+    const updatedState = turnEnd(state);
+    // オンラインではプレイヤーの順番を変える処理が必要
+    setState(updatedState);
+
+    if (params.id) {
+      updateGameState(state.id, updatedState);
+    }
   };
 
   return (
@@ -135,7 +137,7 @@ export const PlayerBoard = () => {
                   height={40}
                   alt={key}
                 />
-                <div className="font-mono">{token.quantity}</div>
+                <div className="font-mono font-bold">{token.quantity}</div>
               </Button>
             );
           })}
@@ -189,10 +191,11 @@ export const PlayerBoard = () => {
 
       <GotPokemons />
 
-      <div className="fixed bottom-5 right-5 z-10">
+      <div className="fixed bottom-5 right-5 z-30">
         <ReservationSheet />
       </div>
 
+      {/* cancel evolve */}
       {state.currentPhase === 'evolve' && (
         <div className="fixed bottom-0 left-0 z-10 w-full bg-background p-5">
           <div className="mx-auto w-fit">
@@ -205,6 +208,19 @@ export const PlayerBoard = () => {
               進化しない
             </Button>
           </div>
+        </div>
+      )}
+
+      {/* Turn end */}
+      {state.currentPhase === 'waiting-end' && (
+        <div
+          className="fixed inset-0 z-10 flex items-center justify-center bg-background/50"
+          onClick={doTurnEnd}
+          onKeyDown={doTurnEnd}
+        >
+          <Button className="rounded-full" size="lg">
+            End
+          </Button>
         </div>
       )}
     </>

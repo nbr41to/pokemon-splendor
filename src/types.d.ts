@@ -41,7 +41,7 @@ type Player = {
 
 type Phase = 'action' | 'evolve' | 'waiting-end';
 type GameState = {
-  id: string;
+  id: string; // room id
   turnCount: number;
   players: Player[];
   board: {

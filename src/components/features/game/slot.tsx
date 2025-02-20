@@ -1,8 +1,10 @@
 import { useEvolve } from '@/lib/state/useEvolve';
 import { useGameState } from '@/lib/state/useGameState';
 import { useMe } from '@/lib/state/useMe';
+import { updateGameState } from '@/lib/supabase/actions';
 import { calcTotalTokens } from '@/utils/calcTokens';
 import { evolvePokemon, getPokemon, reservePokemon } from '@/utils/state';
+import { useParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { PokemonCard } from './pokemon-card';
 
@@ -12,6 +14,7 @@ type Props = {
   inReservation?: boolean;
 };
 export const Slot = ({ phase, pokemon, inReservation = false }: Props) => {
+  const params = useParams<{ id: string | undefined }>();
   const state = useGameState((state) => state.state);
   const setState = useGameState((state) => state.setState);
   const player = useMe((state) => state.player);
@@ -50,6 +53,9 @@ export const Slot = ({ phase, pokemon, inReservation = false }: Props) => {
       setState(newState);
       setMe(newState.players[0]);
       setIsReserving(false);
+      if (params.id) {
+        updateGameState(newState.id, newState);
+      }
       return;
     }
 
@@ -58,6 +64,9 @@ export const Slot = ({ phase, pokemon, inReservation = false }: Props) => {
       const newState = getPokemon(state, pokemon, inReservation);
       setState(newState);
       setMe(newState.players[0]);
+      if (params.id) {
+        updateGameState(newState.id, newState);
+      }
       return;
     }
 
@@ -72,6 +81,9 @@ export const Slot = ({ phase, pokemon, inReservation = false }: Props) => {
       );
       setState(newState);
       setMe(newState.players[0]);
+      if (params.id) {
+        updateGameState(newState.id, newState);
+      }
       return;
     }
   };
