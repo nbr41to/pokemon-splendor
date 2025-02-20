@@ -183,6 +183,10 @@ export const turnEnd = (state: GameState): GameState => {
   newState.board = provideBoardPokemon(newState.board);
   // Phase の初期化
   newState.currentPhase = 'action';
+  // ターン数のincrement
+  newState.turnCount += 1;
+  // プレイヤー順番を変更
+  newState.players.push(newState.players.shift() as Player);
 
   return newState;
 };

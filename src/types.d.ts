@@ -42,6 +42,7 @@ type Player = {
 type Phase = 'action' | 'evolve' | 'waiting-end';
 type GameState = {
   id: string;
+  turnCount: number;
   players: Player[];
   board: {
     ev1: (Pokemon | null)[];

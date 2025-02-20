@@ -16,7 +16,11 @@ export default async function Page() {
 
   return (
     <div className="w-screen pb-52">
-      <SubscribeState player={player} spritesType={spritesType} />
+      <SubscribeState
+        player={player}
+        spritesType={spritesType}
+        gameState={gameState}
+      />
     </div>
   );
 }

@@ -1,32 +1,29 @@
 import { Button } from '@/components/ui/button';
-import { useEvolve } from '@/lib/state/useEvolve';
+import TOKEN from '@/constants/token.json';
 import { useGameState } from '@/lib/state/useGameState';
 import { useMe } from '@/lib/state/useMe';
-import { calcEvolvable } from '@/utils/calcAble';
-import { calcScore } from '@/utils/calcScore';
 import { calcFixedTokens } from '@/utils/calcTokens';
-import { cancelEvolve } from '@/utils/state';
-import { Bookmark, Trophy } from 'lucide-react';
+import { cn } from '@/utils/classNames';
+import { cancelEvolve, getTokens } from '@/utils/state';
+import { Bookmark, Store, X } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
-import { GetTokenFormDialog } from './get-token-form-dialog';
-import { PokemonCardCarrying } from './pokemon-card-carrying';
+import { CurrentTokensHeader } from './current-tokens-header';
+import { GotPokemons } from './got-pokemons';
 import { ReservationSheet } from './reservation-sheet';
 
 export const PlayerBoard = () => {
   const [openGetTokenForm, setOpenGetTokenForm] = useState(false);
+  const [isGettingToken, setIsGettingToken] = useState(false);
 
   const state = useGameState((state) => state.state);
   const setState = useGameState((state) => state.setState);
 
   const player = useMe((state) => state.player);
-  const spritesType = useMe((state) => state.settings.sprites);
+  const setMe = useMe((state) => state.setMe);
 
   const isReserving = useMe((state) => state.isReserving);
   const setIsReserving = useMe((state) => state.setIsReserving);
-
-  const evolve = useEvolve((state) => state.evolve);
-  const setEvolve = useEvolve((state) => state.setEvolve);
 
   const fixedTokens = useMemo(() => calcFixedTokens(player), [player]);
 
@@ -35,93 +32,165 @@ export const PlayerBoard = () => {
     setState(newState);
   };
 
+  const handleOnSubmit = (types: TokenType[]) => {
+    const newState = getTokens(state, types);
+
+    setState(newState);
+    setMe(newState.players[0]);
+  };
+
+  const [selectedTokenTypes, setSelectedTokens] = useState<TokenType[]>([]);
+  const selectToken = (key: TokenType) => {
+    if (selectedTokenTypes.length > 2) return;
+    if (
+      selectedTokenTypes.length === 2 &&
+      selectedTokenTypes[0] === selectedTokenTypes[1]
+    )
+      return;
+
+    setSelectedTokens((prev) => [...prev, key]);
+  };
+
+  const handleGetToken = () => {
+    const newState = getTokens(state, selectedTokenTypes);
+
+    setState(newState);
+    setMe(newState.players[0]);
+
+    setSelectedTokens([]);
+    setIsGettingToken(false);
+  };
+
   return (
     <>
-      <div className="bg-background p-5">
-        <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-4 sm:rounded">
-          <div className="flex items-center">
-            <Trophy size={24} className="m-2 stroke-blue-700" />
-            <span className="font-mono text-xl font-bold text-blue-700">
-              {calcScore(player.pokemons)}
-            </span>
-          </div>
-          <ReservationSheet />
-        </div>
+      <CurrentTokensHeader />
 
-        <div className="flex flex-wrap items-center justify-center space-x-2 space-y-2 sm:gap-x-4 sm:space-x-0 sm:space-y-0">
-          <GetTokenFormDialog
-            disabled={state.currentPhase !== 'action'}
-            open={openGetTokenForm}
-            setOpen={setOpenGetTokenForm}
-          />
-          <Button
-            size="lg"
-            variant={isReserving ? 'destructive' : 'outline'}
-            className="w-44 rounded-full"
-            disabled={
-              state.currentPhase !== 'action' || player.reservations.length > 2
-            }
-            onClick={() => setIsReserving(!isReserving)}
-          >
-            <Bookmark />
-            {isReserving ? '予約をやめる' : '予約をする'}
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-center gap-2 bg-background p-5 sm:gap-4 sm:rounded">
-        {Object.keys(player.tokens).map((key) => {
-          const token = player.tokens[key as TokenType];
-
-          return (
-            <div
-              key={key}
-              className="flex w-24 items-center justify-around rounded border py-1 pr-2 font-mono font-bold sm:w-28 sm:text-xl"
+      <div className="mx-auto w-fit space-y-5 rounded-lg bg-background p-2 sm:p-5">
+        {state.currentPhase === 'action' && (
+          <div className="flex flex-wrap items-center justify-between space-x-2 sm:space-x-4">
+            <Button
+              size="lg"
+              variant={isReserving ? 'destructive' : 'outline'}
+              className="w-44 rounded-full"
+              disabled={
+                state.currentPhase !== 'action' ||
+                player.reservations.length > 2
+              }
+              onClick={() => setIsReserving(!isReserving)}
             >
-              <Image
-                className="block sm:hidden"
-                src={token.spriteUrl}
-                width={32}
-                height={32}
-                alt={key}
-              />
-              <Image
-                className="hidden sm:block"
-                src={token.spriteUrl}
-                width={40}
-                height={40}
-                alt={key}
-              />
-              <div className="">{token.quantity}</div>
-              <div className="pl-2 text-red-600">
-                {fixedTokens[key as TokenType].quantity}
-              </div>
+              <Bookmark />
+              {isReserving ? '予約をやめる' : '予約をする'}
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="rounded-full"
+              disabled={state.currentPhase !== 'action'}
+              onClick={() => setIsGettingToken(!isGettingToken)}
+            >
+              <Store />
+              道具をもらう
+            </Button>
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center justify-center gap-1 bg-background sm:rounded">
+          {(Object.keys(player.tokens) as TokenType[]).map((key) => {
+            if (key === 'gold') return null;
+
+            const token = state.tokens[key];
+
+            return (
+              <Button
+                key={key}
+                variant={!isGettingToken ? 'link' : 'outline'}
+                disabled={
+                  !isGettingToken ||
+                  token.quantity < 1 ||
+                  selectedTokenTypes.length > 2 ||
+                  (selectedTokenTypes.length === 2 &&
+                    selectedTokenTypes.includes(key)) ||
+                  (selectedTokenTypes.length === 2 &&
+                    selectedTokenTypes[0] === selectedTokenTypes[1])
+                }
+                className={cn(
+                  'w-18 h-10 gap-px rounded-full px-2 text-xl sm:h-12',
+                  !isGettingToken &&
+                    'border border-transparent disabled:opacity-100',
+                )}
+                onClick={() => selectToken(key)}
+                // className="flex w-24 items-center justify-around rounded border py-1 pr-2 font-mono font-bold sm:w-28 sm:text-xl"
+              >
+                <Image
+                  className="block sm:hidden"
+                  src={token.spriteUrl}
+                  width={32}
+                  height={32}
+                  alt={key}
+                />
+                <Image
+                  className="hidden sm:block"
+                  src={token.spriteUrl}
+                  width={40}
+                  height={40}
+                  alt={key}
+                />
+                <div className="font-mono">{token.quantity}</div>
+              </Button>
+            );
+          })}
+        </div>
+        {isGettingToken && (
+          <div className="flex gap-4">
+            <div className="flex h-[58px] grow rounded border p-2">
+              {selectedTokenTypes.map((key, index) => {
+                const { SPRITE_URL } =
+                  TOKEN[key.toUpperCase() as keyof typeof TOKEN];
+
+                return (
+                  <Image
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    key={index}
+                    className="flex items-center"
+                    src={SPRITE_URL}
+                    width={40}
+                    height={40}
+                    alt={key}
+                  />
+                );
+              })}
+
+              <Button
+                variant="ghost"
+                className="relative ml-auto size-10 w-fit p-2 [&_svg]:size-8"
+                disabled={selectedTokenTypes.length === 0}
+                onClick={() => setSelectedTokens([])}
+              >
+                <X className="fill-neutral-500" />
+              </Button>
             </div>
-          );
-        })}
+
+            <Button
+              className="h-[58px] w-24 text-base"
+              disabled={
+                selectedTokenTypes.length < 3 &&
+                !(
+                  selectedTokenTypes.length === 2 &&
+                  selectedTokenTypes[0] === selectedTokenTypes[1]
+                )
+              }
+              onClick={handleGetToken}
+            >
+              決 定
+            </Button>
+          </div>
+        )}
       </div>
 
-      <div className="mx-auto flex w-fit flex-wrap justify-center gap-2 py-2 sm:justify-start">
-        {player.pokemons.map((pokemon) => (
-          <PokemonCardCarrying
-            key={pokemon.uid}
-            pokemon={pokemon}
-            spritesType={spritesType}
-            selected={evolve?.evolveFromUid === pokemon.uid}
-            disabled={
-              state.currentPhase !== 'evolve' ||
-              !calcEvolvable(pokemon, player, state.board)
-            }
-            onClick={() => {
-              if (!pokemon.evolveCondition) return;
-              setEvolve({
-                ...pokemon.evolveCondition,
-                evolveFromUid: pokemon.uid,
-                evolveFrom: pokemon.id,
-              });
-            }}
-          />
-        ))}
+      <GotPokemons />
+
+      <div className="fixed bottom-5 right-5 z-10">
+        <ReservationSheet />
       </div>
 
       {state.currentPhase === 'evolve' && (

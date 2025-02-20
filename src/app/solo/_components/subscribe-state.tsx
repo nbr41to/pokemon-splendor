@@ -8,14 +8,16 @@ import { startGame, turnEnd } from '@/utils/state';
 import { nanoid } from 'nanoid';
 import { Board } from './board';
 import { PlayerBoard } from './player-board';
+import { saveGameState } from '@/lib/cookie/solo-game-state';
 
 type Props = {
-  // state: GameState;
+  gameState: GameState;
   player: RoomPlayer;
   spritesType: string | undefined;
 };
 
 export const SubscribeState = ({
+  gameState,
   player,
   spritesType = 'officialArtwork',
 }: Props) => {
@@ -36,6 +38,7 @@ export const SubscribeState = ({
     };
     const initialState = {
       id: nanoid(8),
+      turnCount: 0,
       players: [initialPlayer],
       board: {
         ev1: [null, null, null, null],
@@ -58,6 +61,7 @@ export const SubscribeState = ({
       ...updatedState,
       currentPhase: 'action',
     });
+    saveGameState(updatedState);
   };
 
   return (

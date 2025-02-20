@@ -12,6 +12,7 @@ type Actions = {
 const INITIAL_STATE = JSON.parse(
   JSON.stringify({
     id: nanoid(8),
+    turnCount: 0,
     players: [],
     board: {
       ev1: [null, null, null, null],
