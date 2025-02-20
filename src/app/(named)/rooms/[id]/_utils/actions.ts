@@ -32,33 +32,46 @@ export const toggleReady = async (formData: FormData) => {
   }
 };
 
-export const startGame = async (formData: FormData) => {
-  const roomId = formData.get('roomId') as string | undefined;
-
-  if (!roomId) return;
-
-  const { data: rooms } = await supabase
-    .from('Rooms')
-    .select('*')
-    .eq('id', roomId);
-  const players = rooms?.[0].players as RoomPlayer[];
-
-  // const { data, error } = await supabase
+// TODO: FormAction に変更（したと一緒や）
+export const startGameAction = async (roomId: string, newState: GameState) => {
+  // const { data: rooms } = await supabase
   //   .from('Rooms')
-  //   .update({
-  //     state: {
-  //       id: roomId,
-  //       players: Player[];
-  //       board: {
-  //         ev1: (Pokemon | null)[];
-  //         ev2: (Pokemon | null)[];
-  //         ev3: (Pokemon | null)[];
-  //       };
-  //       tokens: Record<TokenKey, Token>;
-  //       currentPlayer: Player;
-  //       currentPhase: 'action'
-  //     } as GameState,
-  //   })
-  //   .eq('id', roomId)
-  //   .select();
+  //   .select('*')
+  //   .eq('id', roomId);
+
+  // if (!rooms) return;
+  // const state = rooms[0].state as RoomPlayer[];
+
+  const { data, error } = await supabase
+    .from('Rooms')
+    .update({
+      state: newState,
+    })
+    .eq('id', roomId);
+
+  if (error) return error;
+
+  return;
+};
+
+// TODO: FormAction に変更
+export const updateGameAction = async (roomId: string, newState: GameState) => {
+  // const { data: rooms } = await supabase
+  //   .from('Rooms')
+  //   .select('*')
+  //   .eq('id', roomId);
+
+  // if (!rooms) return;
+  // const state = rooms[0].state as RoomPlayer[];
+
+  const { data, error } = await supabase
+    .from('Rooms')
+    .update({
+      state: newState,
+    })
+    .eq('id', roomId);
+
+  if (error) return error;
+
+  return;
 };

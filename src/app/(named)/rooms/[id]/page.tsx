@@ -11,6 +11,7 @@ export default async function Page({
 }) {
   const { id } = await params;
   const playerId = (await getCookie(COOKIE_NAMES.PLAYER_ID)) as string;
+  const spritesType = (await getCookie(COOKIE_NAMES.SPRITES_TYPE)) as string;
 
   const { data: rooms, error } = await supabase
     .from('Rooms')
@@ -20,6 +21,7 @@ export default async function Page({
     ? {
         ...rooms[0],
         players: rooms[0].players as RoomPlayer[],
+        state: rooms[0].state as GameState,
       }
     : null;
 
@@ -31,7 +33,11 @@ export default async function Page({
   return (
     <div className="flex grow flex-col items-center justify-center gap-y-8">
       <h1 className="">部屋</h1>
-      <SubscribeRoom playerId={playerId} room={parsedRoom} />
+      <SubscribeRoom
+        playerId={playerId}
+        room={parsedRoom}
+        spritesType={spritesType}
+      />
     </div>
   );
 }

@@ -1,17 +1,18 @@
 'use client';
 
+import { Board } from '@/components/features/game/board';
+import { PlayerBoard } from '@/components/features/game/player-board';
 import { Button } from '@/components/ui/button';
 import { INITIAL_TOKENS } from '@/constants/initilalValue';
+import { saveGameState } from '@/lib/cookie/solo-game-state';
 import { useGameState } from '@/lib/state/useGameState';
 import { useMe } from '@/lib/state/useMe';
 import { startGame, turnEnd } from '@/utils/state';
 import { nanoid } from 'nanoid';
-import { Board } from './board';
-import { PlayerBoard } from './player-board';
-import { saveGameState } from '@/lib/cookie/solo-game-state';
+import { useState } from 'react';
 
 type Props = {
-  gameState: GameState;
+  gameState: GameState | null;
   player: RoomPlayer;
   spritesType: string | undefined;
 };
@@ -21,12 +22,11 @@ export const SubscribeState = ({
   player,
   spritesType = 'officialArtwork',
 }: Props) => {
+  const [isStarted, setIsStarted] = useState(false);
   const state = useGameState((state) => state.state);
   const setState = useGameState((state) => state.setState);
   const setMe = useMe((state) => state.setMe);
   const setSettings = useMe((state) => state.setSettings);
-
-  const isStarted = state.players.length > 0;
 
   const start = () => {
     const initialPlayer: Player = {
@@ -52,6 +52,13 @@ export const SubscribeState = ({
     setState(startGame(initialState));
     setMe(initialPlayer);
     setSettings({ sprites: spritesType });
+    setIsStarted(true);
+  };
+  const continueGame = () => {
+    // setState(startGame(gameState));
+    // setMe(gameState.players[0]);
+    setSettings({ sprites: spritesType });
+    setIsStarted(true);
   };
 
   const doTurnEnd = () => {
@@ -69,17 +76,27 @@ export const SubscribeState = ({
       <Board />
       <PlayerBoard />
 
-      {!isStarted && (
-        <div
-          className="fixed inset-0 z-10 flex items-center justify-center bg-background/50"
-          onClick={start}
-          onKeyDown={start}
-        >
-          <Button className="rounded-full" size="lg" onClick={start}>
-            Start
-          </Button>
-        </div>
-      )}
+      {!isStarted &&
+        (!gameState ? (
+          <div
+            className="fixed inset-0 z-10 flex items-center justify-center bg-background/50"
+            onClick={start}
+            onKeyDown={start}
+          >
+            <Button className="rounded-full" size="lg" onClick={start}>
+              Start
+            </Button>
+          </div>
+        ) : (
+          <div className="fixed inset-0 z-10 flex items-center justify-center bg-background/50">
+            <Button className="rounded-full" size="lg" onClick={continueGame}>
+              Continue??
+            </Button>
+            <Button className="rounded-full" size="lg" onClick={start}>
+              No
+            </Button>
+          </div>
+        ))}
       {state.currentPhase === 'waiting-end' && (
         <div
           className="fixed inset-0 z-10 flex items-center justify-center bg-background/50"

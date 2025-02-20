@@ -2,8 +2,14 @@
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { INITIAL_TOKENS } from '@/constants/initilalValue';
+import { useGameState } from '@/lib/state/useGameState';
+import { useMe } from '@/lib/state/useMe';
+import { removePlayer } from '@/utils/room';
+import { startGame } from '@/utils/state';
+import { nanoid } from 'nanoid';
 import Form from 'next/form';
-import { toggleReady } from '../_utils/actions';
+import { startGameAction, toggleReady } from '../_utils/actions';
 
 type Props = {
   playerId: string;
@@ -15,6 +21,38 @@ export const Waiting = ({ playerId, room }: Props) => {
     (player) => player.id === playerId,
   )?.isReady;
 
+  const isOwner = room.ownerId === playerId;
+
+  const setState = useGameState((state) => state.setState);
+  const setMe = useMe((state) => state.setMe);
+
+  const gameStart = () => {
+    const initialPlayers: Player[] = room.players.map((player) => ({
+      id: player.id,
+      name: player.name,
+      pokemons: [],
+      tokens: JSON.parse(JSON.stringify(INITIAL_TOKENS)),
+      reservations: [],
+    }));
+    const initialState = startGame({
+      id: nanoid(8),
+      turnCount: 1,
+      players: initialPlayers,
+      board: {
+        ev1: [null, null, null, null],
+        ev2: [null, null, null, null],
+        ev3: [null, null, null, null],
+      },
+      tokens: JSON.parse(JSON.stringify(INITIAL_TOKENS)),
+      currentPhase: 'action',
+    });
+
+    setState(initialState);
+    setMe(initialPlayers.find((player) => player.id === playerId) as Player);
+
+    startGameAction(room.id, initialState);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex gap-2">
@@ -22,6 +60,15 @@ export const Waiting = ({ playerId, room }: Props) => {
           <Card key={player.id} className="p-4">
             <div>{player.name}</div>
             <div>{player.isReady ? 'Ready!!' : 'Waiting...'}</div>
+            {isOwner && player.id !== playerId && (
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => removePlayer(room.id, player.id)}
+              >
+                Remove
+              </Button>
+            )}
           </Card>
         ))}
       </div>
@@ -37,12 +84,17 @@ export const Waiting = ({ playerId, room }: Props) => {
         </Button>
       </Form>
 
-      <Form action={toggleReady}>
-        <input type="hidden" name="roomId" value={room.id} />
-        <Button type="submit" className="w-full">
-          Start
-        </Button>
-      </Form>
+      <Button
+        disabled={
+          room.players.length < 2 ||
+          room.players.some((p) => !p.isReady) ||
+          !isOwner
+        }
+        className="w-full"
+        onClick={gameStart}
+      >
+        Start
+      </Button>
 
       <pre>{JSON.stringify(room, null, 2)}</pre>
     </div>

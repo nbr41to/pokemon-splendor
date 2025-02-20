@@ -65,6 +65,7 @@ type Room = {
   name: string;
   ownerId: string;
   players: RoomPlayer[];
+  state: GameState | null;
 };
 
 /* GM */
