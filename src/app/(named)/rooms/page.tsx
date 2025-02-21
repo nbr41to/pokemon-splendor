@@ -1,11 +1,8 @@
-// 'use client';
-
-import { Button } from '@/components/ui/button';
 import { COOKIE_NAMES } from '@/lib/cookie/names';
 import { getCookie } from '@/lib/cookie/store';
 import { supabase } from '@/lib/supabase/client';
-import { Settings, User } from 'lucide-react';
-import Link from 'next/link';
+import {} from 'lucide-react';
+import { CreateRoomButton } from './_components/create-room-button';
 import { RoomList } from './_components/room-list';
 
 export default async function Page() {
@@ -27,8 +24,8 @@ export default async function Page() {
   }
 
   return (
-    <div className="flex grow flex-col items-center justify-center gap-y-8">
-      <h1 className="">部屋いちらん</h1>
+    <div className="mx-auto flex w-full max-w-xl grow flex-col items-center justify-center gap-y-8 p-5">
+      <h1 className="py-4">みんなのへや</h1>
       <RoomList
         rooms={parsedRooms}
         player={{
@@ -38,19 +35,7 @@ export default async function Page() {
         }}
       />
 
-      <Button asChild>
-        <Link href="/solo">
-          <User />
-          一人プレイ
-        </Link>
-      </Button>
-
-      <Button asChild>
-        <Link href="/my-page">
-          <Settings />
-          マイページ
-        </Link>
-      </Button>
+      <CreateRoomButton />
     </div>
   );
 }

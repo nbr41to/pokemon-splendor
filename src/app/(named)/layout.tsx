@@ -11,5 +11,5 @@ export default async function Layout({
 
   if (!playerName) return <SaveNameDialog />;
 
-  return <div className="grow bg-background">{children}</div>;
+  return <div className="grow">{children}</div>;
 }

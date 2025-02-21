@@ -10,6 +10,7 @@ const notoSansJP = Noto_Sans_JP({
 });
 export const metadata: Metadata = {
   title: 'Pokemon Splendor',
+  description: 'たくさんのポケモンをゲットしよう！！',
 };
 
 export default function RootLayout({

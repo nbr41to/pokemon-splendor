@@ -32,5 +32,8 @@ export const createRoom = async (formData: FormData) => {
 
   if (error) {
     console.error(error);
+    return;
   }
+
+  return data;
 };
