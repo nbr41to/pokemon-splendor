@@ -96,8 +96,9 @@ export const Waiting = ({ playerId, room }: Props) => {
       >
         Start
       </Button>
-
-      <pre>{JSON.stringify(room, null, 2)}</pre>
+      <div className="w-screen overflow-x-scroll">
+        <pre>{JSON.stringify(room, null, 2)}</pre>
+      </div>
 
       <Button
         variant="destructive"

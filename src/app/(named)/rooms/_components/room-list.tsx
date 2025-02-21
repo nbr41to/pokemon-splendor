@@ -59,6 +59,8 @@ export const RoomList = ({ rooms: rawRooms, player }: Props) => {
           router.push(`/rooms/${room.id}`);
         };
 
+        if (!room) return null;
+
         return (
           <Button
             key={room.id}
