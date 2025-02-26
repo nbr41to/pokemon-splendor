@@ -21,8 +21,9 @@ export const startGame = (state: GameState): GameState => {
 
   // 全プレイヤーに初期トークンを配布
   for (const player of newState.players) {
-    for (const token of Object.values(player.tokens)) {
-      token.quantity = 3;
+    for (const key of Object.keys(player.tokens) as TokenType[]) {
+      if (key === 'gold') continue;
+      player.tokens[key].quantity = 3;
     }
   }
 
