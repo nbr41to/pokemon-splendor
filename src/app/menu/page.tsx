@@ -31,7 +31,7 @@ export default async function Page() {
       <AppLogo />
 
       <Button
-        className="rounded-full font-bold"
+        className="rounded-full bg-orange-500 font-bold text-white hover:bg-orange-400 hover:text-white"
         size="lg"
         variant="outline"
         asChild
@@ -43,7 +43,7 @@ export default async function Page() {
       </Button>
 
       <Button
-        className="rounded-full font-bold"
+        className="rounded-full bg-[#F5E1DA] font-bold hover:bg-[#F5E1DA99]"
         size="lg"
         variant="outline"
         asChild
@@ -55,7 +55,7 @@ export default async function Page() {
       </Button>
 
       <Button
-        className="rounded-full font-bold"
+        className="rounded-full bg-blue-600 font-bold text-white hover:bg-blue-500 hover:text-white"
         size="lg"
         variant="outline"
         asChild

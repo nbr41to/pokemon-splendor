@@ -19,6 +19,13 @@ export const startGame = (state: GameState): GameState => {
   // プレイヤーのシャッフル
   newState.players = newState.players.sort(() => Math.random() - 0.5);
 
+  // 全プレイヤーに初期トークンを配布
+  for (const player of newState.players) {
+    for (const token of Object.values(player.tokens)) {
+      token.quantity = 3;
+    }
+  }
+
   // 場のトークンの追加
   for (const value of Object.values(newState.tokens)) {
     value.quantity =

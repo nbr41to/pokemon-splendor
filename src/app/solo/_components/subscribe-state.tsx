@@ -48,9 +48,10 @@ export const SubscribeState = ({
       tokens: JSON.parse(JSON.stringify(INITIAL_TOKENS)),
       currentPhase: 'action',
     } as GameState;
+    const newState = startGame(initialState);
 
-    setState(startGame(initialState));
-    setMe(initialPlayer);
+    setState(newState);
+    setMe(newState.players[0]);
     setSettings({ sprites: spritesType });
     setIsStarted(true);
   };
